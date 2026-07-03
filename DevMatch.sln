@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36930.0 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevMatch.Api", "DevMatch.Api", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevMatch.Application", "DevMatch.Application", "{6070650F-731F-47D2-A245-6F188D0E6C00}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevMatch.Domain", "DevMatch.Domain", "{26859641-A100-4C9C-9296-CB3D9AF920DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevMatch.Infrastructure", "DevMatch.Infrastructure", "{718F67D5-0729-4F59-86F4-236AF82B09E6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevMatch.Worker", "DevMatch.Worker", "{9DA53E69-8EE9-480F-A7E4-AE7EF17D4BD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevMatch.SharedKernel", "DevMatch.SharedKernel", "{4852C42D-9AED-48B8-89B9-110F93EDBABF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "frontend", "frontend", "{C0EE6C95-5A8A-4BDA-BD27-335EC0CE49AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devmatch-web", "devmatch-web", "{F2BE96F4-392C-4EE1-9DB0-84F83C450427}"
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11C95ABD-2E02-467E-8E18-E82DFB7D5CB6}
+	EndGlobalSection
+EndGlobal
