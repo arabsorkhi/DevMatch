@@ -13,4 +13,8 @@
     <Folder Include="Entities\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DevMatch.SharedKernel\DevMatch.SharedKernel.csproj" />
+  </ItemGroup>
+
 </Project>

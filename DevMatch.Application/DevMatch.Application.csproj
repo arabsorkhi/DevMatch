@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevMatch.Domain\DevMatch.Domain.csproj" />
+    <ProjectReference Include="..\DevMatch.SharedKernel\DevMatch.SharedKernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +43,10 @@
     <Folder Include="Repository\" />
     <Folder Include="Bookmark\" />
     <Folder Include="Developer\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
   </ItemGroup>
 
 </Project>
