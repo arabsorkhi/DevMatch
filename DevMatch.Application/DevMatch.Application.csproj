@@ -11,17 +11,32 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\NewFolder\Handlers\" />
-    <Folder Include="Features\NewFolder\DTO\" />
-    <Folder Include="Features\Issue\Command\" />
-    <Folder Include="Features\Issue\DTO\" />
-    <Folder Include="Features\Issue\Handlers\" />
-    <Folder Include="Features\Issue\Query\" />
-    <Folder Include="Features\Issue\Validatores\" />
-    <Folder Include="Features\NewFolder\" />
-    <Folder Include="Features\NewFolder\Validatores\" />
-    <Folder Include="Features\NewFolder\Query\" />
-    <Folder Include="Features\NewFolder\Command\" />
+    <Folder Include="Features\Bookmarks\Command\" />
+    <Folder Include="Features\Bookmarks\DTO\" />
+    <Folder Include="Features\Bookmarks\Handlers\" />
+    <Folder Include="Features\Bookmarks\Query\" />
+    <Folder Include="Features\Bookmarks\Validatores\" />
+    <Folder Include="Features\Auth\Command\" />
+    <Folder Include="Features\Auth\DTO\" />
+    <Folder Include="Features\Auth\Handlers\" />
+    <Folder Include="Features\Auth\Query\" />
+    <Folder Include="Features\Auth\Validatores\" />
+    <Folder Include="Features\Developers\Command\" />
+    <Folder Include="Features\Developers\DTO\" />
+    <Folder Include="Features\Developers\Handlers\" />
+    <Folder Include="Features\Developers\Query\" />
+    <Folder Include="Features\Developers\Validatores\" />
+    <Folder Include="Features\Repositories\Handlers\" />
+    <Folder Include="Features\Repositories\DTO\" />
+    <Folder Include="Features\Issues\Command\" />
+    <Folder Include="Features\Issues\DTO\" />
+    <Folder Include="Features\Issues\Handlers\" />
+    <Folder Include="Features\Issues\Query\" />
+    <Folder Include="Features\Issues\Validatores\" />
+    <Folder Include="Features\Repositories\" />
+    <Folder Include="Features\Repositories\Validatores\" />
+    <Folder Include="Features\Repositories\Query\" />
+    <Folder Include="Features\Repositories\Command\" />
     <Folder Include="Recommendation\" />
     <Folder Include="Issue\" />
     <Folder Include="Repository\" />

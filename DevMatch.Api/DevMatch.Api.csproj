@@ -20,9 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Endpoints\" />
     <Folder Include="Extensions\" />
     <Folder Include="Configurations\" />
     <Folder Include="MiddleWares\" />
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>
