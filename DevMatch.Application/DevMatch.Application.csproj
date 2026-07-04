@@ -10,4 +10,23 @@
     <ProjectReference Include="..\DevMatch.Domain\DevMatch.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\NewFolder\Handlers\" />
+    <Folder Include="Features\NewFolder\DTO\" />
+    <Folder Include="Features\Issue\Command\" />
+    <Folder Include="Features\Issue\DTO\" />
+    <Folder Include="Features\Issue\Handlers\" />
+    <Folder Include="Features\Issue\Query\" />
+    <Folder Include="Features\Issue\Validatores\" />
+    <Folder Include="Features\NewFolder\" />
+    <Folder Include="Features\NewFolder\Validatores\" />
+    <Folder Include="Features\NewFolder\Query\" />
+    <Folder Include="Features\NewFolder\Command\" />
+    <Folder Include="Recommendation\" />
+    <Folder Include="Issue\" />
+    <Folder Include="Repository\" />
+    <Folder Include="Bookmark\" />
+    <Folder Include="Developer\" />
+  </ItemGroup>
+
 </Project>

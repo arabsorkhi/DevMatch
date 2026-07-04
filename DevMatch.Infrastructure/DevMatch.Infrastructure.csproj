@@ -15,4 +15,13 @@
     <ProjectReference Include="..\DevMatch.Domain\DevMatch.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logging\" />
+    <Folder Include="Quartz\" />
+    <Folder Include="Authentication\" />
+    <Folder Include="Emails\" />
+    <Folder Include="Redis\" />
+    <Folder Include="Github\" />
+  </ItemGroup>
+
 </Project>

@@ -19,4 +19,10 @@
     <ProjectReference Include="..\DevMatch.Application\DevMatch.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Configurations\" />
+    <Folder Include="MiddleWares\" />
+  </ItemGroup>
+
 </Project>
