@@ -1,0 +1,6 @@
+@DevMatch.Api_HostAddress = http://localhost:5242
+
+GET {{DevMatch.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
