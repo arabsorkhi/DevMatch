@@ -12,32 +12,32 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Bookmarks\Command\" />
-    <Folder Include="Features\Bookmarks\DTO\" />
-    <Folder Include="Features\Bookmarks\Handlers\" />
-    <Folder Include="Features\Bookmarks\Query\" />
-    <Folder Include="Features\Bookmarks\Validatores\" />
-    <Folder Include="Features\Auth\Command\" />
-    <Folder Include="Features\Auth\DTO\" />
-    <Folder Include="Features\Auth\Handlers\" />
-    <Folder Include="Features\Auth\Query\" />
-    <Folder Include="Features\Auth\Validatores\" />
-    <Folder Include="Features\Developers\Command\" />
-    <Folder Include="Features\Developers\DTO\" />
-    <Folder Include="Features\Developers\Handlers\" />
-    <Folder Include="Features\Developers\Query\" />
-    <Folder Include="Features\Developers\Validatores\" />
-    <Folder Include="Features\Repositories\Handlers\" />
-    <Folder Include="Features\Repositories\DTO\" />
-    <Folder Include="Features\Issues\Command\" />
-    <Folder Include="Features\Issues\DTO\" />
-    <Folder Include="Features\Issues\Handlers\" />
-    <Folder Include="Features\Issues\Query\" />
-    <Folder Include="Features\Issues\Validatores\" />
-    <Folder Include="Features\Repositories\" />
-    <Folder Include="Features\Repositories\Validatores\" />
-    <Folder Include="Features\Repositories\Query\" />
-    <Folder Include="Features\Repositories\Command\" />
+    <Folder Include="Features\Query\Command\" />
+    <Folder Include="Features\Query\DTO\" />
+    <Folder Include="Features\Query\Handlers\" />
+    <Folder Include="Features\Query\Query\" />
+    <Folder Include="Features\Query\Validatores\" />
+    <Folder Include="Features\Commands\Command\" />
+    <Folder Include="Features\Commands\DTO\" />
+    <Folder Include="Features\Commands\Handlers\" />
+    <Folder Include="Features\Commands\Query\" />
+    <Folder Include="Features\Commands\Validatores\" />
+    <Folder Include="Features\DTO\Command\" />
+    <Folder Include="Features\DTO\DTO\" />
+    <Folder Include="Features\DTO\Handlers\" />
+    <Folder Include="Features\DTO\Query\" />
+    <Folder Include="Features\DTO\Validatores\" />
+    <Folder Include="Features\Handlers\Handlers\" />
+    <Folder Include="Features\Handlers\DTO\" />
+    <Folder Include="Features\Validators\Command\" />
+    <Folder Include="Features\Validators\DTO\" />
+    <Folder Include="Features\Validators\Handlers\" />
+    <Folder Include="Features\Validators\Query\" />
+    <Folder Include="Features\Validators\Validatores\" />
+    <Folder Include="Features\Handlers\" />
+    <Folder Include="Features\Handlers\Validatores\" />
+    <Folder Include="Features\Handlers\Query\" />
+    <Folder Include="Features\Handlers\Command\" />
     <Folder Include="Recommendation\" />
     <Folder Include="Issue\" />
     <Folder Include="Repository\" />
@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.17" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5" />
   </ItemGroup>
 
