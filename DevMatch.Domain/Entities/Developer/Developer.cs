@@ -28,6 +28,7 @@ namespace DevMatch.Domain.Entities.Developer
         public string? Bio { get; private set; }
 
         public string? Location { get; private set; }
+        public DateTime CreatedAtUtc { get; private set; }
 
         public static Developer Create(
             string githubId,

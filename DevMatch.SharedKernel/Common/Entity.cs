@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace DevMatch.SharedKernel.Common
 {
-    public abstract class Entity<TKey>
+    public interface IEntity
+    {
+    }
+    public abstract class Entity<TKey> :IEntity
         where TKey : notnull
     {
         public TKey Id { get; protected set; } = default!;

@@ -6,25 +6,28 @@ using System.Threading.Tasks;
 
 namespace DevMatch.SharedKernel.Result
 {
-    public class ResultGen<T> : Result
+    public class Result<T> : Result
     {
-        public T? Value { get; }
-
-        private ResultGen(T value)
-            : base(true, null)
+        private Result(
+            T value)
+            : base(true, Error.None)
         {
             Value = value;
         }
 
-        private ResultGen(string error)
+        private Result(
+            Error error)
             : base(false, error)
         {
         }
 
-        public static ResultGen<T> Success(T value)
+        public T? Value { get; }
+
+        public static Result<T> Success(T value)
             => new(value);
 
-        public new static ResultGen<T> Failure(string error)
+        public new static Result<T> Failure(
+            Error error)
             => new(error);
     }
 }

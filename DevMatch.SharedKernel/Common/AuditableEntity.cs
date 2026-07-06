@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DevMatch.SharedKernel.Common
 {
-    public abstract class AuditableEntity<TKey> : Entity<TKey>
+    public abstract class AuditableEntity<TKey> :  AggregateRoot<TKey>
         where TKey : notnull
     {
         public DateTime CreatedAtUtc { get; protected set; }
