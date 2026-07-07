@@ -1,3 +1,4 @@
+using DevMatch.Api.Infrastructure;
 using DevMatch.Application;
 using DevMatch.Infrastructure.DependancyInjection;
 
@@ -5,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddApplication();
-
+builder.Services.AddEndpoints();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -27,5 +28,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapEndpoints();
 app.Run();

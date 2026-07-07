@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DevMatch.Application.Persistence;
+using DevMatch.Application.Abstraction.Persistence;
 using DevMatch.Domain.Entities.Developer;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +28,7 @@ using Microsoft.EntityFrameworkCore;
 
 //Domain
 
-namespace DevMatch.Infrastructure.Persistence
+namespace DevMatch.Infrastructure.Abstraction.Persistence
 {
     public class DevMatchDbContext
         : DbContext, IDevMatchDbContext

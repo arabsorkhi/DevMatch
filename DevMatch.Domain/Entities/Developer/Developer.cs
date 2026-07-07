@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace DevMatch.Domain.Entities.Developer
 {
     //Domain نباید به EF وابسته شود.  no DataAnnotation
-    public sealed class Developer : AggregateRoot<Guid>
+    // public sealed class Developer : AggregateRoot<Guid>
+    public sealed class Developer : AuditableEntity<Guid>
     {
-        // dont use :new Developer()
         private Developer()
         {
         }
@@ -28,19 +28,56 @@ namespace DevMatch.Domain.Entities.Developer
         public string? Bio { get; private set; }
 
         public string? Location { get; private set; }
-        public DateTime CreatedAtUtc { get; private set; }
 
         public static Developer Create(
             string githubId,
-            string userName)
+            string userName,
+            string? name,
+            string? email,
+            string? avatarUrl,
+            string? bio,
+            string? location)
         {
             return new Developer
             {
                 Id = Guid.NewGuid(),
+
                 GithubId = githubId,
+
                 UserName = userName,
+
+                Name = name,
+
+                Email = email,
+
+                AvatarUrl = avatarUrl,
+
+                Bio = bio,
+
+                Location = location,
+
                 CreatedAtUtc = DateTime.UtcNow
             };
+        }
+
+        public void UpdateProfile(
+            string? name,
+            string? email,
+            string? avatar,
+            string? bio,
+            string? location)
+        {
+            Name = name;
+
+            Email = email;
+
+            AvatarUrl = avatar;
+
+            Bio = bio;
+
+            Location = location;
+
+            UpdatedAtUtc = DateTime.UtcNow;
         }
     }
 }

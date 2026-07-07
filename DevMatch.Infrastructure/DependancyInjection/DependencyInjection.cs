@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DevMatch.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using DevMatch.Application.Persistence;
+using DevMatch.Application.Abstraction.Persistence;
+using DevMatch.Infrastructure.Abstraction.Persistence;
 
 namespace DevMatch.Infrastructure.DependancyInjection
 {
@@ -22,9 +22,12 @@ namespace DevMatch.Infrastructure.DependancyInjection
                 options.UseNpgsql(
                     configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IDevMatchDbContext>(
-                provider => provider.GetRequiredService<DevMatchDbContext>());
+                provider =>
+                    provider.GetRequiredService<DevMatchDbContext>());
+             
 
             return services;
         }

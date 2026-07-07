@@ -1,13 +1,12 @@
 ﻿using DevMatch.Domain.Entities.Developer;
 using Microsoft.EntityFrameworkCore;
 
-namespace DevMatch.Application.Persistence
+namespace DevMatch.Application.Abstraction.Persistence
 {
     public interface IDevMatchDbContext
     {
         DbSet<Developer> Developers { get; }
 
-        Task<int> SaveChangesAsync(
-            CancellationToken cancellationToken = default);
+      
     }
 }
