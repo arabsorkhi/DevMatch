@@ -5,14 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevMatch.SharedKernel.Messaging
+namespace DevMatch.Application.Abstraction.Messaging
 {
-    //بدون MediatR، اما با همان تفکیک مسئولیت.
-    public interface IQueryHandler<TQuery, TResult>
-        where TQuery : IQuery<TResult>
+    public interface ICommandHandler<TCommand, TResult>
+        where TCommand : ICommand<TResult>
     {
         Task<Result<TResult>> Handle(
-            TQuery query,
+            TCommand command,
             CancellationToken cancellationToken);
     }
 }

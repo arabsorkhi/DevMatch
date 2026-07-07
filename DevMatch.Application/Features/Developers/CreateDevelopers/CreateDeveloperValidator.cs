@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace DevMatch.Application.Features.Developer.CreateDeveloper
+namespace DevMatch.Application.Features.Developers.CreateDevelopers
 {
     public sealed class CreateDeveloperValidator
         : AbstractValidator<CreateDeveloperCommand>

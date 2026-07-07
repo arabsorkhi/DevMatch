@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevMatch.Application.Features.Repository
+namespace DevMatch.Application.Features.Repositories
 {
     //اگر از روز اول Repository بنویسیم، فقط داریم EF Core را Wrap می‌کنیم
 
