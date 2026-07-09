@@ -2,10 +2,10 @@
 
 namespace DevMatch.Application.Features.Developers.CreateDevelopers
 {
-    public sealed class CreateDeveloperValidator
+    public sealed class GetDeveloperValidator
         : AbstractValidator<CreateDeveloperCommand>
     {
-        public CreateDeveloperValidator()
+        public GetDeveloperValidator()
         {
             RuleFor(x => x.GithubId)
                 .NotEmpty()

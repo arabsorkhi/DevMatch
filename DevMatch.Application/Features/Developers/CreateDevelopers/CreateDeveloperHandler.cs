@@ -4,24 +4,34 @@ using DevMatch.Application.Abstraction.Persistence;
 using DevMatch.Application.Common.Error;
 using DevMatch.SharedKernel.Result;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.WebRequestMethods;
 
 
 namespace DevMatch.Application.Features.Developers.CreateDevelopers
 {
     //وابستگی به MediatR نداری. with Handler Pattern
-    
+    //CreateDeveloper
+    // 
+    // ↓
+    // 
+    // Developer ساخته شد
+    // 
+    // ↓
+    // 
+    // Response
+
+
     public sealed class CreateDeveloperHandler  : ICommandHandler< CreateDeveloperCommand, CreateDeveloperResponse>
     {
         private readonly IDevMatchDbContext _context;
 
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateDeveloperHandler(
-            IDevMatchDbContext context,
+        //Handler اصلاً نباید بداند HTTP چیست.
+        public CreateDeveloperHandler(IDevMatchDbContext context,
             IUnitOfWork unitOfWork)
         {
             _context = context;
-
             _unitOfWork = unitOfWork;
         }
 
@@ -57,7 +67,8 @@ namespace DevMatch.Application.Features.Developers.CreateDevelopers
             return Result<CreateDeveloperResponse>.Success(
                 new CreateDeveloperResponse(
                     developer.Id,
-                    developer.UserName));
+                    developer.UserName
+                    , $"/developers/{developer.Id}")); //چون URL هم Business نیست.  =>false code 
         }
     }
 

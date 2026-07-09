@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DevMatch.Application.Abstraction.Persistence;
 using DevMatch.Domain.Entities.Developer;
+using DevMatch.SharedKernel.Common;
 using Microsoft.EntityFrameworkCore;
 
 //Clean Architecture
@@ -30,6 +31,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DevMatch.Infrastructure.Abstraction.Persistence
 {
+    //حالا DbContext مسئول Audit است.
+
     public class DevMatchDbContext
         : DbContext, IDevMatchDbContext
     {
@@ -48,6 +51,34 @@ namespace DevMatch.Infrastructure.Abstraction.Persistence
                 typeof(DevMatchDbContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
+        }
+        public override async Task<int> SaveChangesAsync(
+            CancellationToken cancellationToken = default)
+        {
+            UpdateAuditableEntities();
+
+            return await base.SaveChangesAsync(
+                cancellationToken);
+        }
+
+        private void UpdateAuditableEntities()
+        {
+            var entries =
+                ChangeTracker
+                    .Entries<AuditableEntity<Guid>>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAtUtc = DateTime.UtcNow;
+                }
+
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedAtUtc = DateTime.UtcNow;
+                }
+            }
         }
     }
 }

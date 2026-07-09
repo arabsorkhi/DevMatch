@@ -9,8 +9,8 @@ namespace DevMatch.SharedKernel.Common
     public abstract class AuditableEntity<TKey> :  AggregateRoot<TKey>
         where TKey : notnull
     {
-        public DateTime CreatedAtUtc { get; protected set; }
+        public DateTime CreatedAtUtc { get;   set; }//internal?
 
-        public DateTime? UpdatedAtUtc { get; protected set; }
+        public DateTime? UpdatedAtUtc { get;   set; }
     }
 }

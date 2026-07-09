@@ -21,14 +21,44 @@ namespace DevMatch.SharedKernel.Result
         public Error Error { get; }
 
         public static Result Success()
-            => new(true, Error.None);
+        {
+            return new Result(
+                true,
+                Error.None);
+        }
 
-        public static Result Failure(Error error)
-            => new(false, error);
+        //Business Error: not exception
+        //Developer Exists
+        // 
+        // Repository Not Found
+        // 
+        // Issue Closed
+        public static Result Failure(
+            Error error)
+        {
+            return new Result(
+                false,
+                error);
+        }
+
+        //Unexpected Error:
+        //SQL Server Down
+        // 
+        // Redis Timeout
+        // 
+        // NullReferenceException
+        // 
+        // OutOfMemoryException
+        //with MW
     }
+
+
+
     public sealed record Error(
         string Code,
-        string Description)
+        string Description
+    //   , int StatusCode
+        )
     {
         public static readonly Error None
             = new(string.Empty, string.Empty);

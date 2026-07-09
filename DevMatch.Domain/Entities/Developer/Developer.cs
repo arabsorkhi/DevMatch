@@ -28,6 +28,16 @@ namespace DevMatch.Domain.Entities.Developer
         public string? Bio { get; private set; }
 
         public string? Location { get; private set; }
+        public bool IsDeleted { get; private set; }
+
+        public DateTime? DeletedAtUtc { get; private set; }
+
+        public void Delete()
+        {
+            IsDeleted = true;
+
+            DeletedAtUtc = DateTime.UtcNow;
+        }
 
         public static Developer Create(
             string githubId,
@@ -56,7 +66,7 @@ namespace DevMatch.Domain.Entities.Developer
 
                 Location = location,
 
-                CreatedAtUtc = DateTime.UtcNow
+                //  CreatedAtUtc = DateTime.UtcNow //Entity نباید بداند EF چه زمانی Save می‌کند.
             };
         }
 
@@ -77,7 +87,7 @@ namespace DevMatch.Domain.Entities.Developer
 
             Location = location;
 
-            UpdatedAtUtc = DateTime.UtcNow;
+         //   UpdatedAtUtc = DateTime.UtcNow;
         }
     }
 }

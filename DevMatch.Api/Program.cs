@@ -1,8 +1,26 @@
 using DevMatch.Api.Infrastructure;
+using DevMatch.Api.MiddleWares;
 using DevMatch.Application;
 using DevMatch.Infrastructure.DependancyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+//each error got it :{
+//   "title": "Developer.NotFound",
+//   "status": 404,
+//   "traceId": "...",
+//   "timestamp": "2026-07-09T17:45:10Z"
+// }
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Extensions["traceId"] =
+            context.HttpContext.TraceIdentifier;
+
+        context.ProblemDetails.Extensions["timestamp"] =
+            DateTime.UtcNow;
+    };
+});
 
 // Add services to the container.
 builder.Services.AddApplication();
@@ -26,7 +44,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseGlobalExceptionHandling();
 app.MapControllers();
 app.MapEndpoints();
 app.Run();

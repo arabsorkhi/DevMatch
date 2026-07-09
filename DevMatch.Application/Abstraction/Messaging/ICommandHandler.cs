@@ -14,4 +14,15 @@ namespace DevMatch.Application.Abstraction.Messaging
             TCommand command,
             CancellationToken cancellationToken);
     }
+
+    //public interface ICommandHandler<TCommand>
+
+    //    where TCommand : ICommand
+    //{
+    //    Task<Result> Handle(
+
+    //        TCommand command,
+
+    //        CancellationToken cancellationToken);
+    //}
 }

@@ -6,28 +6,43 @@ using System.Threading.Tasks;
 
 namespace DevMatch.SharedKernel.Result
 {
-    public class Result<T> : Result
+    public sealed class Result<T> : Result
     {
         private Result(
-            T value)
-            : base(true, Error.None)
+
+            bool isSuccess,
+
+            T? value,
+
+            Error error)
+
+            : base(
+                isSuccess,
+                error)
         {
             Value = value;
         }
 
-        private Result(
-            Error error)
-            : base(false, error)
-        {
-        }
+        
 
         public T? Value { get; }
 
-        public static Result<T> Success(T value)
-            => new(value);
+        public static Result<T> Success(
+            T value)
+        {
+            return new Result<T>(
+                true,
+                value,
+                Error.None);
+        }
 
-        public new static Result<T> Failure(
+        public static new Result<T> Failure(
             Error error)
-            => new(error);
+        {
+            return new Result<T>(
+                false,
+                default,
+                error);
+        }
     }
 }
