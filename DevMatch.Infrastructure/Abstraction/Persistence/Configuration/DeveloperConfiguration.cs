@@ -7,7 +7,7 @@ using DevMatch.Domain.Entities.Developer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DevMatch.Infrastructure.Abstraction.Persistence
+namespace DevMatch.Infrastructure.Abstraction.Persistence.Configuration
 {
     public class DeveloperConfiguration
         : IEntityTypeConfiguration<Developer>

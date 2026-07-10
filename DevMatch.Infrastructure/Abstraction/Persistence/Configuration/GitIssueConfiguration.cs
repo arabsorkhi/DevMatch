@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevMatch.Domain.Entities.Skill
+namespace DevMatch.Infrastructure.Abstraction.Persistence.Configuration
 {
-    internal class Class1
+    internal class GitIssueConfiguration
     {
     }
 }

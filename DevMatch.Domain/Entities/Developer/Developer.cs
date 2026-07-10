@@ -9,6 +9,32 @@ namespace DevMatch.Domain.Entities.Developer
 {
     //Domain نباید به EF وابسته شود.  no DataAnnotation
     // public sealed class Developer : AggregateRoot<Guid>
+    //Developer
+    // 
+    // 1
+    // 
+    // ↓
+    // 
+    // ∞
+    // 
+    // Repository
+
+
+
+    //Developer
+    //     ↓
+    // Developer Profile
+    //     ↓
+    // Skills
+    //     ↓
+    // Experience
+    //     ↓
+    // Interests
+    //     ↓
+    // Matching Engine
+    //     ↓
+    // Recommended Issues
+
     public sealed class Developer : AuditableEntity<Guid>
     {
         private Developer()
@@ -31,6 +57,13 @@ namespace DevMatch.Domain.Entities.Developer
         public bool IsDeleted { get; private set; }
 
         public DateTime? DeletedAtUtc { get; private set; }
+
+        private readonly List<GitRepository.GitRepository> _repositories =
+            new(); //no need to : developer.AddRepository(...)
+
+        //ساخت Repository در Handler انجام می‌شود.
+        public IReadOnlyCollection<GitRepository.GitRepository> Repositories
+            => _repositories.AsReadOnly(); 
 
         public void Delete()
         {
@@ -89,5 +122,6 @@ namespace DevMatch.Domain.Entities.Developer
 
          //   UpdatedAtUtc = DateTime.UtcNow;
         }
+
     }
 }
