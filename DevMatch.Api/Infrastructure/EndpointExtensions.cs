@@ -6,33 +6,43 @@ namespace DevMatch.Api.Infrastructure
     public static class EndpointExtensions
     {
         public static IServiceCollection AddEndpoints(
-            this IServiceCollection services)
+            this IServiceCollection services,
+            Assembly assembly)
         {
-            var endpoints = Assembly
-                .GetExecutingAssembly()
-                .DefinedTypes
-                .Where(t =>
-                    t is { IsAbstract: false, IsInterface: false } &&
-                    typeof(IEndpoint).IsAssignableFrom(t))
-                .Select(Activator.CreateInstance)
-                .Cast<IEndpoint>();
+            var endpointTypes =
+                assembly
+                    .DefinedTypes
+                    .Where(type =>
+                        !type.IsAbstract &&
+                        !type.IsInterface &&
+                        typeof(IEndpoint).IsAssignableFrom(type))
+                    .ToArray();
 
-            foreach (var endpoint in endpoints)
-                services.AddSingleton(endpoint);
+            foreach (var endpointType in endpointTypes)
+            {
+              //Transient : Endpointها هیچ State نگه نمی‌دارند.هر Request یک Instance جدید می‌گیرد.
+                services.AddTransient(
+                    typeof(IEndpoint),
+                    endpointType);
+            }
 
             return services;
         }
 
-        public static IApplicationBuilder MapEndpoints(
+        public static WebApplication MapEndpoints(
             this WebApplication app)
         {
             var endpoints =
-                app.Services.GetServices<IEndpoint>();
+                app.Services
+                    .GetRequiredService<IEnumerable<IEndpoint>>();
 
             foreach (var endpoint in endpoints)
+            {
                 endpoint.MapEndpoint(app);
+            }
 
             return app;
         }
     }
 }
+ 

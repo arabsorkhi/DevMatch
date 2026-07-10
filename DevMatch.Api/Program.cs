@@ -24,7 +24,7 @@ builder.Services.AddProblemDetails(options =>
 
 // Add services to the container.
 builder.Services.AddApplication();
-builder.Services.AddEndpoints();
+builder.Services.AddEndpoints(typeof(Program).Assembly); 
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
