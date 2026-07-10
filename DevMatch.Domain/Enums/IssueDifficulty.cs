@@ -27,6 +27,8 @@ namespace DevMatch.Domain.Enums
 
         Closed = 2
     }
+
+    //for developer or issue
     public enum SkillLevel
     {
         Beginner = 1,
