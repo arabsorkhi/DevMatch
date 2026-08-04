@@ -97,6 +97,9 @@ builder.Services
             client.DefaultRequestHeaders.Accept.ParseAdd(
                 "application/vnd.github+json");
         });
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddControllers();
@@ -113,6 +116,8 @@ if (app.Environment.IsDevelopment())
 app.UseGlobalExceptionHandling();
 app.UseHttpsRedirection();
 app.UseRequestLogging();
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
