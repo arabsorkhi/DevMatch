@@ -56,6 +56,36 @@ namespace DevMatch.Domain.Entities.Skill
         private DeveloperSkill()
         {
         }
+        private DeveloperSkill(
+            Guid id,
+            Guid developerId,
+            Guid skillId,
+            SkillLevel level,
+            ConfidenceScore confidence,
+            bool isVerified,
+            DeveloperSkillSource source,
+            DateTimeOffset utcNow) 
+           
+        {
+            if (developerId == Guid.Empty)
+                throw new ArgumentException(
+                    "DeveloperId cannot be empty.",
+                    nameof(developerId));
+
+            if (skillId == Guid.Empty)
+                throw new ArgumentException(
+                    "SkillId cannot be empty.",
+                    nameof(skillId));
+
+            DeveloperId = developerId;
+            SkillId = skillId;
+            Level = level;
+            Confidence = (confidence);
+            IsVerified = isVerified;
+            Source = source;
+            CreatedAtUtc = utcNow;
+            UpdatedAtUtc = utcNow;
+        }
 
         public Guid DeveloperId { get; private set; }
 
@@ -78,74 +108,78 @@ namespace DevMatch.Domain.Entities.Skill
 
         public Skill Skill { get; private set; } = null!;
 
-
+        public DeveloperSkillSource Source { get; private set; }
         public static DeveloperSkill Create(
-            Guid developerId,
-            Guid skillId,
-            SkillLevel level,
-            int confidenceScore)
-        {
-            if (confidenceScore < 0 || confidenceScore > 100)
-                throw new ArgumentOutOfRangeException(nameof(confidenceScore));
+        Guid developerId,
+        Guid skillId,
+        SkillLevel level,
+        ConfidenceScore confidence,
+        bool isVerified,
+        DeveloperSkillSource source,
+        DateTimeOffset utcNow)
+        => new(Guid.NewGuid(), developerId, skillId, level, confidence, isVerified, source, utcNow);
 
-            return new DeveloperSkill
-            {
-                Id = Guid.NewGuid(),
-
-                DeveloperId = developerId,
-
-                SkillId = skillId,
-
-                Level = level,
-
-                Confidence = confidenceScore,
-
-                IsVerified = false,
-
-                CreatedAtUtc = DateTime.UtcNow
-            };
-        }
-
-        public void Verify()
+        public void Verify(DateTimeOffset utcNow)
         {
             if (IsVerified)
                 return;
 
             IsVerified = true;
-
-            UpdatedAtUtc = DateTime.UtcNow;
+            UpdatedAtUtc = utcNow;
         }
-        public void UnVerify()
+
+        public void Unverify(DateTimeOffset utcNow)
         {
             if (!IsVerified)
                 return;
 
             IsVerified = false;
-
-            UpdatedAtUtc = DateTime.UtcNow;
+            UpdatedAtUtc = utcNow;
         }
 
         public void ChangeLevel(
-            SkillLevel level)
+            SkillLevel level,
+            DateTimeOffset utcNow)
         {
             if (Level == level)
                 return;
 
             Level = level;
-
-            UpdatedAtUtc = DateTime.UtcNow;
+            UpdatedAtUtc = utcNow;
         }
+
         public void UpdateConfidence(
-            int score)
+            int confidence,
+            DateTimeOffset utcNow)
         {
-            if (score < 0 || score > 100)
-                throw new ArgumentOutOfRangeException(nameof(score));
+            ConfidenceScore newConfidence =
+                ConfidenceScore.Create(confidence);
 
-            Confidence = score;
+            if (Confidence == newConfidence)
+                return;
 
-            UpdatedAtUtc = DateTime.UtcNow;
+            Confidence = newConfidence;
+            UpdatedAtUtc = utcNow;
         }
 
+        public void Update(
+            SkillLevel level,
+            int confidence,
+            bool isVerified,
+            DeveloperSkillSource source,
+            DateTimeOffset utcNow)
+        {
+            Level = level;
+            Confidence = ConfidenceScore.Create(confidence);
+            IsVerified = isVerified;
+            Source = source;
+            UpdatedAtUtc = utcNow;
+        }
+    
+
+        private static decimal ClampConfidence(decimal confidence)
+            => Math.Clamp(confidence, 0m, 1m);
 
     }
+    
 }

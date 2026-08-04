@@ -40,7 +40,7 @@ namespace DevMatch.Application.Features.Developers.CreateDevelopers
         {
             var exists =
                 await _context.Developers.AnyAsync(
-                    x => x.GithubId == command.GithubId,
+                    x => x.GitHubUserId == command.GithubUserId,
                     cancellationToken);
 
             if (exists)
@@ -51,13 +51,14 @@ namespace DevMatch.Application.Features.Developers.CreateDevelopers
 
             var developer =
                 Domain.Entities.Developer.Developer.Create(
-                    command.GithubId,
+                    command.GithubUserId,
                     command.UserName,
                     command.Name,
                     command.Email,
                     command.AvatarUrl,
                     command.Bio,
-                    command.Location);
+                    command.Location
+                    );
 
             _context.Developers.Add(developer);
 

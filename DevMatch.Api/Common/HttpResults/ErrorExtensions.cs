@@ -21,5 +21,10 @@ namespace DevMatch.Api.Common.HttpResults
                 _ => StatusCodes.Status500InternalServerError
             };
         }
+
+        
+
     }
-    }
+
+
+}

@@ -1,7 +1,10 @@
 using DevMatch.Api.Infrastructure;
 using DevMatch.Api.MiddleWares;
 using DevMatch.Application;
+using DevMatch.Application.Abstraction.Authentication.Github;
+using DevMatch.Infrastructure.Authentication.Github;
 using DevMatch.Infrastructure.DependancyInjection;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 //each error got it :{
@@ -27,6 +30,32 @@ builder.Services.AddApplication();
 builder.Services.AddEndpoints(typeof(Program).Assembly); 
 builder.Services.AddInfrastructure(builder.Configuration);
 
+
+builder.Services
+    .Configure<GitHubOptions>(builder.Configuration.GetSection(
+        GitHubOptions.SectionName));
+
+builder.Services
+    .AddHttpClient<IGitHubClient, GitHubClient>(
+        (provider, client) =>
+        {
+            var options =
+                provider.GetRequiredService<
+                    IOptions<GitHubOptions>>().Value;
+
+            client.BaseAddress =
+                new Uri(options.BaseUrl);
+
+            client.Timeout =
+                TimeSpan.FromSeconds(
+                    options.TimeoutSeconds);
+
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(
+                options.UserAgent);
+
+            client.DefaultRequestHeaders.Accept.ParseAdd(
+                "application/vnd.github+json");
+        });
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddControllers();
@@ -40,11 +69,11 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
 app.UseGlobalExceptionHandling();
+app.UseHttpsRedirection();
+app.UseRequestLogging();
+app.UseAuthorization();
+
 app.MapControllers();
 app.MapEndpoints();
 app.Run();

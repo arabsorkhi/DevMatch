@@ -1,4 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DevMatch.Application.Abstraction;
+using DevMatch.Application.Abstraction.Auth;
+using DevMatch.Application.Features.Auth.Github.BeginLogin;
+using DevMatch.Domain.Entities.Matching;
+using DevMatch.Domain.Services;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace DevMatch.Application
@@ -9,20 +15,43 @@ namespace DevMatch.Application
             this IServiceCollection services)
         {
 
-            ////هیچ Handler Register نمی‌شود. همه خودکار هستند.
-            //services.Scan(scan =>
-            //{
-            //    scan.FromAssemblyOf<DependencyInjection>()
-            //        .AddClasses(c => c.Where(t =>
-            //            t.Name.EndsWith("Handler")))
-            //        .AsSelf()
-            //        .WithScopedLifetime();
-            //});
+            services.AddSingleton(TimeProvider.System);
+          //  services.AddSingleton(MatchingWeights.Default);
+            services.AddSingleton(new MatchingWeights
+            {
+                Skill = 0.35m,
+                Repository = 0.10m,
+                Contribution = 0.10m,
+                Activity = 0.10m,
+                Preference = 0.15m,
+                History = 0.10m,
+                Level = 0.10m
+            });
 
-            //services.AddValidatorsFromAssembly(
-            //    Assembly.GetExecutingAssembly());
+            services.AddScoped<IMatchingEngine, BasicMatchingEngine>();
+
+            services.AddScoped<IMatchingService, MatchingService>();
+         //   services.AddHttpClient<IGitHubOAuthClient, GitHubOAuthClient>();
+            services.AddScoped<BeginGitHubLoginHandler>();
+            var assembly = typeof(DependencyInjection).Assembly;
+
+            services.Scan(scan => scan
+                .FromAssemblies(assembly)
+                .AddClasses(classes => classes
+                    .Where(type => type.Name.EndsWith(
+                        "Handler",
+                        StringComparison.Ordinal)))
+                .AsSelf()
+                .WithScopedLifetime());
+
+            services.Scan(scan => scan
+                .FromAssemblies(assembly)
+                .AddClasses(classes => classes
+                    .AssignableTo(typeof(IValidator<>)))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
 
             return services;
         }
     }
-}
+ }

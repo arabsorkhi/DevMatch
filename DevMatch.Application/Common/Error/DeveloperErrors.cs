@@ -11,13 +11,15 @@
             new(
                 "Developer.AlreadyExists",
                 "Developer already exists."
-          //     , StatusCodes.Status409Conflict
+                ,  SharedKernel.Result.ErrorType.AlreadyExists
+                //     , StatusCodes.Status409Conflict
                 );//یعنی لایه Application به ASP.NET Core وابسته شده است.این خلاف Clean Architecture است.
 
         public static readonly SharedKernel.Result.Error NotFound =
             new(
                 "Developer.NotFound",
                 "Developer was not found."
+                ,SharedKernel.Result.ErrorType.NotFound
               //  ,StatusCodes.Status404NotFound
               );
     }

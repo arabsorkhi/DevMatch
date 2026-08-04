@@ -2,7 +2,7 @@
 {
     public sealed record GetDeveloperResponse(
         Guid Id,
-        string GithubId,
+        long GithubId,
         string UserName,
         string? Name,
         string? Email,

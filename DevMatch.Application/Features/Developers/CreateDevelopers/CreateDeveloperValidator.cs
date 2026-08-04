@@ -7,9 +7,9 @@ namespace DevMatch.Application.Features.Developers.CreateDevelopers
     {
         public GetDeveloperValidator()
         {
-            RuleFor(x => x.GithubId)
-                .NotEmpty()
-                .MaximumLength(50);
+            RuleFor(x => x.GithubUserId)
+                .NotEmpty();
+                //.MaximumLength(50);
 
             RuleFor(x => x.UserName)
                 .NotEmpty()

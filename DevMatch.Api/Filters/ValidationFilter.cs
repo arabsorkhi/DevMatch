@@ -11,28 +11,21 @@ namespace DevMatch.Api.Filters
             EndpointFilterInvocationContext context,
             EndpointFilterDelegate next)
         {
-            var validator =
-                context.HttpContext.RequestServices
-                    .GetService<IValidator<T>>();
-
+            IValidator<T>? validator = context.HttpContext.RequestServices.GetService<IValidator<T>>();
             if (validator is null)
                 return await next(context);
 
-            var argument =
-                context.Arguments
-                    .OfType<T>()
-                    .First();
+            T? argument = context.Arguments.OfType<T>().FirstOrDefault();
+            if (argument is null)
+                return await next(context);
 
-            var validation =
-                await validator.ValidateAsync(argument);
+            var validation = await validator.ValidateAsync(
+                argument,
+                context.HttpContext.RequestAborted);
 
-            if (!validation.IsValid)
-            {
-                return Results.ValidationProblem(
-                    validation.ToDictionary());
-            }
-
-            return await next(context);
+            return validation.IsValid
+                ? await next(context)
+                : Results.ValidationProblem(validation.ToDictionary());
         }
     }
 }

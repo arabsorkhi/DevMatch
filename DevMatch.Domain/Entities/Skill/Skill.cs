@@ -23,6 +23,10 @@ namespace DevMatch.Domain.Entities.Skill
 
         public bool IsActive { get; private set; }
 
+        private readonly List<SkillAlias> _aliases = new();
+
+        public IReadOnlyCollection<SkillAlias> Aliases
+            => _aliases;
         public static Skill Create(
             string name,
             string? description)

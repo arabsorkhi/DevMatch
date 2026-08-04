@@ -1,55 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DevMatch.Application.Abstraction.Messaging;
+﻿using DevMatch.Application.Abstraction.Messaging;
 using DevMatch.Application.Abstraction.Persistence;
-using DevMatch.Application.Common.Error;
+using DevMatch.Domain.Entities.Developer;
 using DevMatch.SharedKernel.Result;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevMatch.Application.Features.Developers.UpdateDevelopers
 {
-    public sealed class UpdateDeveloperHandler
+    //نام SynchronizeDeveloperHandler منطقی‌تر است چون اطلاعات Developer را با پروفایل GitHub همگام می‌کنی.
+    public sealed class UpsertDeveloperHandler
         : ICommandHandler<
             UpdateDeveloperCommand,
             UpdateDeveloperResponse>
     {
         private readonly IDevMatchDbContext _context;
-
         private readonly IUnitOfWork _unitOfWork;
+        private readonly TimeProvider _timeProvider;
 
-        public UpdateDeveloperHandler(
+        public UpsertDeveloperHandler(
             IDevMatchDbContext context,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            TimeProvider timeProvider)
         {
             _context = context;
             _unitOfWork = unitOfWork;
+            _timeProvider = timeProvider;
         }
 
         public async Task<Result<UpdateDeveloperResponse>> Handle(
-            UpdateDeveloperCommand command,
+            UpdateDeveloperCommand request,
             CancellationToken cancellationToken)
         {
-            var developer =
+            DateTimeOffset utcNow = _timeProvider.GetUtcNow();
+
+            Developer? developer =
                 await _context.Developers
                     .FirstOrDefaultAsync(
-                        x => x.Id == command.Id,
+                        x => x.Id == request.Id,
                         cancellationToken);
 
             if (developer is null)
             {
-                return Result<UpdateDeveloperResponse>.Failure(
-                    DeveloperErrors.NotFound);
+                developer = Developer.Create(
+                    request.GitHubUserId,
+                    request.GitHubUsername,
+                    request.DisplayName,
+                    request.Email,
+                    request.AvatarUrl,
+                    request.Bio,
+                    request.Location);
+
+                _context.Developers.Add(developer);
             }
 
-            developer.UpdateProfile(
-                command.Name,
-                command.Email,
-                command.AvatarUrl,
-                command.Bio,
-                command.Location);
+            developer.SynchronizeGitHubProfile(
+                request.GitHubUserId,
+                request.GitHubUsername,
+                request.DisplayName,
+                request.Email,
+                request.AvatarUrl,
+                request.Bio,
+                request.Location,
+                request.Company,
+                request.BlogUrl,
+                utcNow);
 
             await _unitOfWork.SaveChangesAsync(
                 cancellationToken);

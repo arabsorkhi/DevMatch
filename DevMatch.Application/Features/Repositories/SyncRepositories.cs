@@ -8,7 +8,7 @@ namespace DevMatch.Application.Features.Repositories
 {
     //اگر از روز اول Repository بنویسیم، فقط داریم EF Core را Wrap می‌کنیم
 
-   // Repository زمانی ارزش دارد که:
+    // Repository زمانی ارزش دارد که:
 
     //MongoDB داشته باشی
     //    ElasticSearch داشته باشی
@@ -17,8 +17,31 @@ namespace DevMatch.Application.Features.Repositories
 
     //    الان هیچ‌کدام را نداریم.
 
+    //GitHub
+    // 
+    // ↓
+    // 
+    // Exists؟
+    // 
+    // ↓
+    // 
+    // Yes
+    // 
+    // Update
+    // 
+    // ↓
+    // 
+    // No
+    // 
+    // Insert
+    // 
+    // ↓
+    // 
+    // Missing
+    // 
+    // Archive Repository حذف نمی‌شود.
 
-    internal class Class1
+    internal class SyncRepositories
     {
     }
 }

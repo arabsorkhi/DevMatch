@@ -10,6 +10,15 @@ namespace DevMatch.SharedKernel.Result
     {
         protected Result(bool isSuccess, Error error)
         {
+            if (isSuccess && error != Error.None)
+            {
+                throw new InvalidOperationException();
+            }
+
+            if (!isSuccess && error == Error.None)
+            {
+                throw new InvalidOperationException();
+            }
             IsSuccess = isSuccess;
             Error = error;
         }
@@ -50,17 +59,5 @@ namespace DevMatch.SharedKernel.Result
         // 
         // OutOfMemoryException
         //with MW
-    }
-
-
-
-    public sealed record Error(
-        string Code,
-        string Description
-    //   , int StatusCode
-        )
-    {
-        public static readonly Error None
-            = new(string.Empty, string.Empty);
     }
 }

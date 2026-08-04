@@ -20,7 +20,7 @@ namespace DevMatch.Api.Endpoints.Developers
         private static async Task<IResult> Handle(
             Guid id,
             UpdateDeveloperCommand command,
-            UpdateDeveloperHandler handler,
+            UpsertDeveloperHandler handler,
             CancellationToken cancellationToken)
         {
             command = command with { Id = id };

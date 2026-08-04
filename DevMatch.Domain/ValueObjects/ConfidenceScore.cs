@@ -19,6 +19,18 @@ namespace DevMatch.Domain.ValueObjects
 
             Value = value;
         }
+        public static ConfidenceScore Create(int value)
+        {
+            if (value is < 0 or > 100)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(value),
+                    value,
+                    "Confidence score must be between 0 and 100.");
+            }
+
+            return new ConfidenceScore(value);
+        }
 
         public static ConfidenceScore Zero
             => new(0);
@@ -35,6 +47,9 @@ namespace DevMatch.Domain.ValueObjects
             => new(value);
 
         public override string ToString()
-            => $"{Value}%";
+        {
+            return Value.ToString();
+        }
+
     }
 }

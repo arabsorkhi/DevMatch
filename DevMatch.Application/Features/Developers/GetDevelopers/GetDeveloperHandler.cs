@@ -50,9 +50,9 @@ namespace DevMatch.Application.Features.Developers.GetDevelopers
             return Result<GetDeveloperResponse>.Success(
                 new GetDeveloperResponse(
                     developer.Id,
-                    developer.GithubId,
+                    developer.GitHubUserId,
                     developer.UserName,
-                    developer.Name,
+                    developer.DisplayName,
                     developer.Email,
                     developer.AvatarUrl,
                     developer.Bio,

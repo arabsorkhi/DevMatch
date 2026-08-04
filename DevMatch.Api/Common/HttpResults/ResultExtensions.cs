@@ -1,4 +1,5 @@
 ﻿using DevMatch.SharedKernel.Result;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace DevMatch.Api.Common.HttpResults
 {
@@ -48,8 +49,80 @@ namespace DevMatch.Api.Common.HttpResults
 
                 statusCode: result.Error.ToStatusCode());
         }
+        public static ProblemHttpResult ToProblem(this Result result)
+        {
+            if (result.IsSuccess)
+            {
+                throw new InvalidOperationException(
+                    "A successful result cannot be converted to a problem.");
+            }
 
-       
+            return TypedResults.Problem(
+                statusCode: GetStatusCode(result.Error.Type),
+                title: GetTitle(result.Error.Type),
+                detail: result.Error.Description,
+                extensions: new Dictionary<string, object?>
+                {
+                    ["code"] = result.Error.Code
+                });
+        }
+
+        private static int GetStatusCode(ErrorType errorType)
+        {
+            return errorType switch
+            {
+                ErrorType.Validation =>
+                    StatusCodes.Status400BadRequest,
+
+                ErrorType.Unauthorized =>
+                    StatusCodes.Status401Unauthorized,
+
+                ErrorType.Forbidden =>
+                    StatusCodes.Status403Forbidden,
+
+                ErrorType.NotFound =>
+                    StatusCodes.Status404NotFound,
+
+                ErrorType.Conflict =>
+                    StatusCodes.Status409Conflict,
+
+                ErrorType.TooManyRequests =>
+                    StatusCodes.Status429TooManyRequests,
+
+                ErrorType.Failure =>
+                    StatusCodes.Status500InternalServerError,
+
+                _ =>
+                    StatusCodes.Status500InternalServerError
+            };
+        }
+
+        private static string GetTitle(ErrorType errorType)
+        {
+            return errorType switch
+            {
+                ErrorType.Validation => "Bad Request",
+                ErrorType.Unauthorized => "Unauthorized",
+                ErrorType.Forbidden => "Forbidden",
+                ErrorType.NotFound => "Not Found",
+                ErrorType.Conflict => "Conflict",
+                ErrorType.TooManyRequests => "Too Many Requests",
+                ErrorType.Failure => "Server Error",
+                _ => "Server Error"
+            };
+        }
+
     }
 }
- 
+
+
+//Result<RepositoryResponse> result =
+//    await handler.Handle(query, cancellationToken);
+
+//return result.IsSuccess
+//    ? TypedResults.Ok(result.Value)
+//    : result.ToProblem();
+
+
+//return Result.Failure<RepositoryResponse>(
+//    GitHubErrors.RateLimited);

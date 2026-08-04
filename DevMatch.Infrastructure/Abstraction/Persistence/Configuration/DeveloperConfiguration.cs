@@ -18,16 +18,22 @@ namespace DevMatch.Infrastructure.Abstraction.Persistence.Configuration
             builder.ToTable("Developers");
 
             builder.HasKey(x => x.Id);
+            builder.HasQueryFilter(
+                x => !x.IsDeleted);
+            builder.Property(x => x.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder.Property(x => x.DeletedAtUtc);
 
             builder.Property(x => x.UserName)
                 .HasMaxLength(100)
                 .IsRequired();
 
-            builder.Property(x => x.GithubId)
+            builder.Property(x => x.GitHubUserId)
                 .HasMaxLength(50)
                 .IsRequired();
 
-            builder.Property(x => x.Name)
+            builder.Property(x => x.DisplayName)
                 .HasMaxLength(150);
 
             builder.Property(x => x.Email)
@@ -42,7 +48,7 @@ namespace DevMatch.Infrastructure.Abstraction.Persistence.Configuration
             builder.Property(x => x.Location)
                 .HasMaxLength(150);
 
-            builder.HasIndex(x => x.GithubId)
+            builder.HasIndex(x => x.GitHubUserId)
                 .IsUnique();
 
             builder.HasIndex(x => x.UserName)

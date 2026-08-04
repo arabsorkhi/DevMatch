@@ -10,8 +10,11 @@ namespace DevMatch.Application.Features.Developers.UpdateDevelopers
     public sealed record UpdateDeveloperCommand(
 
         Guid Id,
+        long GitHubUserId,
 
-        string? Name,
+        string? GitHubUsername,
+
+        string? DisplayName,
 
         string? Email,
 
@@ -19,7 +22,9 @@ namespace DevMatch.Application.Features.Developers.UpdateDevelopers
 
         string? Bio,
 
-        string? Location)
+        string? Location
+        ,String Company
+        ,string BlogUrl)
 
         : ICommand<UpdateDeveloperResponse>;
 }

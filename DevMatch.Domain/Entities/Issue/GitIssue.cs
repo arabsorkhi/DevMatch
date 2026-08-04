@@ -1,4 +1,5 @@
-﻿using DevMatch.Domain.Enums;
+﻿using DevMatch.Domain.Entities.Skill;
+using DevMatch.Domain.Enums;
 using DevMatch.SharedKernel.Common;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace DevMatch.Domain.Entities.Issue
         public string Title { get; private set; } = null!;
 
         public string? Body { get; private set; }
-
+        public string Url { get; private set; } = null!;
         public GitIssueState State { get; private set; }
 
         public IssueDifficulty Difficulty { get; private set; }
@@ -33,9 +34,17 @@ namespace DevMatch.Domain.Entities.Issue
 
         public bool IsHelpWanted { get; private set; }
 
-        public DateTime? ClosedAtUtc { get; private set; }
-
+        public int EstimatedMinutes { get; private set; }
+        public bool IsAssigned { get; private set; }
+        public DateTimeOffset GithubCreatedAtUtc { get; private set; }
+        public DateTimeOffset GithubUpdatedAtUtc { get; private set; }
+        public DateTimeOffset? ClosedAtUtc { get; private set; }
+        public DateTimeOffset LastSyncedAtUtc { get; private set; }
         public GitRepository.GitRepository GitRepository { get; private set; } = null!;
+        private readonly List<IssueSkill> _issueSkills = [];
+
+        public IReadOnlyCollection<IssueSkill> IssueSkills =>
+            _issueSkills;
 
         //GitHub Sync
         // 
@@ -46,7 +55,15 @@ namespace DevMatch.Domain.Entities.Issue
         // ↓
         // 
         // Database
-
+        private GitIssue(Guid id, Guid repositoryId, long gitHubIssueId, int number, DateTimeOffset utcNow)
+            
+        {
+            GitRepositoryId = repositoryId;
+            GithubIssueId = gitHubIssueId;
+            Number = number;
+            CreatedAtUtc = utcNow;
+            UpdatedAtUtc = utcNow;
+        }
         public static GitIssue Create(
             Guid repositoryId,
             long githubIssueId,
@@ -56,6 +73,7 @@ namespace DevMatch.Domain.Entities.Issue
             bool goodFirstIssue,
             bool helpWanted)
         {
+            DateTime now = DateTime.UtcNow;
             return new GitIssue
             {
                 Id = Guid.NewGuid(),
@@ -77,9 +95,60 @@ namespace DevMatch.Domain.Entities.Issue
                 State = GitIssueState.Open,
 
                 Difficulty = IssueDifficulty.Unknown,
-
-                CreatedAtUtc = DateTime.UtcNow
+                GithubCreatedAtUtc = now,
+                GithubUpdatedAtUtc = now,
+                LastSyncedAtUtc = now,
+                CreatedAtUtc = now
             };
+        }
+        public static GitIssue CreateFromGitHub(
+            Guid repositoryId,
+            long githubIssueId,
+            int number,
+            string title,
+            string? body,
+            string htmlUrl,
+            string state,
+            bool isAssigned,
+            DateTimeOffset githubCreatedAt,
+            DateTimeOffset githubUpdatedAt,
+            DateTimeOffset? closedAt,
+            IReadOnlyCollection<string> labels,
+            DateTime syncedAtUtc)
+        {
+            var issue = new GitIssue
+            {
+                Id = Guid.NewGuid(),
+                GitRepositoryId = repositoryId,
+                GithubIssueId = githubIssueId,
+                Difficulty = IssueDifficulty.Unknown,
+                CreatedAtUtc = syncedAtUtc
+            };
+
+            issue.ApplyGitHubState(
+                number, title, body, htmlUrl, state, isAssigned,
+                githubCreatedAt, githubUpdatedAt, closedAt, labels, syncedAtUtc);
+
+            return issue;
+        }
+
+        public void SyncFromGitHub(
+            int number,
+            string title,
+            string? body,
+            string htmlUrl,
+            string state,
+            bool isAssigned,
+            DateTimeOffset githubCreatedAt,
+            DateTimeOffset githubUpdatedAt,
+            DateTimeOffset? closedAt,
+            IReadOnlyCollection<string> labels,
+            DateTime syncedAtUtc)
+        {
+            ApplyGitHubState(
+                number, title, body, htmlUrl, state, isAssigned,
+                githubCreatedAt, githubUpdatedAt, closedAt, labels, syncedAtUtc);
+            UpdatedAtUtc = syncedAtUtc;
         }
 
         public void UpdateFromGithub(
@@ -139,6 +208,41 @@ namespace DevMatch.Domain.Entities.Issue
             Body = body;
 
             UpdatedAtUtc = DateTime.UtcNow;
+        }
+        
+
+        private void ApplyGitHubState(
+            int number,
+            string title,
+            string? body,
+            string htmlUrl,
+            string state,
+            bool isAssigned,
+            DateTimeOffset githubCreatedAt,
+            DateTimeOffset githubUpdatedAt,
+            DateTimeOffset? closedAt,
+            IReadOnlyCollection<string> labels,
+            DateTime syncedAtUtc)
+        {
+            Number = number;
+            Title = title;
+            Body = body;
+            Url = htmlUrl;
+            State = string.Equals(state, "closed", StringComparison.OrdinalIgnoreCase)
+                ? GitIssueState.Closed
+                : GitIssueState.Open;
+            IsAssigned = isAssigned;
+            GithubCreatedAtUtc = githubCreatedAt.UtcDateTime;
+            GithubUpdatedAtUtc = githubUpdatedAt.UtcDateTime;
+            ClosedAtUtc = closedAt?.UtcDateTime;
+            LastSyncedAtUtc = syncedAtUtc;
+
+            HashSet<string> normalizedLabels = labels
+                .Select(SkillAlias.Normalize)
+                .ToHashSet(StringComparer.Ordinal);
+
+            IsGoodFirstIssue = normalizedLabels.Contains(SkillAlias.Normalize("good first issue"));
+            IsHelpWanted = normalizedLabels.Contains(SkillAlias.Normalize("help wanted"));
         }
     }
 }

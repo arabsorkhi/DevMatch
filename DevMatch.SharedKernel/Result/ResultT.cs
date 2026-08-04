@@ -30,6 +30,7 @@ namespace DevMatch.SharedKernel.Result
         public static Result<T> Success(
             T value)
         {
+            ArgumentNullException.ThrowIfNull(value);
             return new Result<T>(
                 true,
                 value,
@@ -39,6 +40,7 @@ namespace DevMatch.SharedKernel.Result
         public static new Result<T> Failure(
             Error error)
         {
+            ArgumentNullException.ThrowIfNull(error);
             return new Result<T>(
                 false,
                 default,

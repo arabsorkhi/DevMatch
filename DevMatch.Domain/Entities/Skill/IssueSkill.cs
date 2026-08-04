@@ -38,7 +38,7 @@ namespace DevMatch.Domain.Entities.Skill
         public Guid SkillId { get; private set; }
 
         public SkillLevel RequiredLevel { get; private set; }
-
+        public decimal Confidence { get; private set; }
         /// <summary>
         /// 0..100
         /// اهمیت این مهارت در Issue

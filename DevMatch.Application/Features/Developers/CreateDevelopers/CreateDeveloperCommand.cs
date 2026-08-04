@@ -9,7 +9,7 @@ namespace DevMatch.Application.Features.Developers.CreateDevelopers
 {
     public sealed record CreateDeveloperCommand(
 
-        string GithubId,
+        long GithubUserId,
 
         string UserName,
 
@@ -21,7 +21,11 @@ namespace DevMatch.Application.Features.Developers.CreateDevelopers
 
         string? Bio,
 
-        string? Location)
+        string? Location
+         )
 
         : ICommand<CreateDeveloperResponse>;
+
+
+
 }

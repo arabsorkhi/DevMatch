@@ -18,14 +18,11 @@ namespace DevMatch.Domain.ValueObjects
     //پس خروجی نباید فقط یک عدد باشد.
     public sealed record MatchScore
     {
-        public int Percentage { get; }
+        public double Percentage { get; }
 
-        public MatchScore(int percentage)
+        public MatchScore(double percentage)
         {
-            Percentage = Math.Clamp(
-                percentage,
-                0,
-                100);
+            Percentage = Math.Clamp(percentage, 0, 100);
         }
 
         public bool IsQualified
