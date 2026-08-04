@@ -1,5 +1,4 @@
-﻿using DevMatch.Application.Abstraction.Auth;
-using DevMatch.SharedKernel.Result;
+﻿using DevMatch.SharedKernel.Result;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +6,20 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using DevMatch.Application.Common.Error;
+using DevMatch.Application.Abstraction.Authentication;
 
-namespace DevMatch.Application.Features.Auth.Github.BeginLogin
+namespace DevMatch.Application.Features.Authentication.Github.BeginLogin
 {
     public sealed class BeginGitHubLoginHandler
     {
         private readonly IGitHubOAuthClient _gitHubOAuthClient;
+        private readonly IOAuthStateService _stateService;
 
         public BeginGitHubLoginHandler(
-            IGitHubOAuthClient gitHubOAuthClient)
+            IGitHubOAuthClient gitHubOAuthClient, IOAuthStateService stateService)
         {
             _gitHubOAuthClient = gitHubOAuthClient;
+            _stateService = stateService;
         }
 
         public Task<Result<BeginGitHubLoginResponse>> Handle(
@@ -41,10 +43,10 @@ namespace DevMatch.Application.Features.Auth.Github.BeginLogin
             }
 
             var response = new BeginGitHubLoginResponse(
-                authorizationUrl);
+                authorizationUrl, state);
 
-            return Task.FromResult(
-                Result<BeginGitHubLoginResponse>.Success(response));
+            return Task.FromResult(Result<BeginGitHubLoginResponse>.Success(
+                new BeginGitHubLoginResponse(authorizationUrl, state)));
         }
 
         private static string GenerateState()

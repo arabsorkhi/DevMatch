@@ -2,9 +2,10 @@
 using DevMatch.Domain.Entities.Developer;
 using DevMatch.Domain.Entities.Matching;
 using DevMatch.Domain.Entities.Skill;
+using DevMatch.Domain.Services;
 using DevMatch.Domain.ValueObjects;
 
-namespace DevMatch.Domain.Services
+namespace DevMatch.Application
 {
 
     //MatchingService چند Issue را به Engine می‌دهد و نتایج را رتبه‌بندی می‌کند.

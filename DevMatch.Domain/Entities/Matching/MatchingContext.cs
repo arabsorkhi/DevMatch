@@ -2,7 +2,7 @@
 using DevMatch.Domain.Entities.Skill;
 using DevMatch.Domain.ValueObjects;
 
-namespace DevMatch.Domain.Entities.Recommendation
+namespace DevMatch.Domain.Entities.Matching
 {
     //این مدل Entity نیست. DTO هم نیست. فقط  Input Model  است.
 

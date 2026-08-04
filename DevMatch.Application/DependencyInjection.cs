@@ -1,11 +1,9 @@
 ﻿using DevMatch.Application.Abstraction;
-using DevMatch.Application.Abstraction.Auth;
-using DevMatch.Application.Features.Auth.Github.BeginLogin;
+using DevMatch.Application.Features.Authentication.Github.BeginLogin;
 using DevMatch.Domain.Entities.Matching;
 using DevMatch.Domain.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace DevMatch.Application
 {

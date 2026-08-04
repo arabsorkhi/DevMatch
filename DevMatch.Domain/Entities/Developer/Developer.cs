@@ -50,7 +50,7 @@ namespace DevMatch.Domain.Entities.Developer
     public sealed class Developer : AggregateRoot<Guid>
     {
         private readonly List<DeveloperSkill> _skills = [];
-
+ 
         private const int GitHubUsernameMaxLength = 100;
         private const int DisplayNameMaxLength = 200;
         private const int EmailMaxLength = 320;
@@ -59,6 +59,7 @@ namespace DevMatch.Domain.Entities.Developer
         private const int LocationMaxLength = 200;
         private const int CompanyMaxLength = 200;
         private const int BlogUrlMaxLength = 2_000;  
+
         public Guid Id { get; }
         public long GitHubUserId { get; private set; }  
 
@@ -77,9 +78,16 @@ namespace DevMatch.Domain.Entities.Developer
         public string? Location { get; private set; }
         public string? Company { get; private set; }
         public string? BlogUrl { get; private set; }
+        public string[] PreferredLanguages { get; private set; } = [];
+        public string[] PreferredTopics { get; private set; } = [];
+        public string[] ExcludedLabels { get; private set; } = [];
+        public int? DailyAvailableMinutes { get; private set; }
+        public bool AvoidDocumentation { get; private set; }
+        public bool PreferBackend { get; private set; }
+        public DateTimeOffset? OnboardingCompletedAtUtc { get; private set; }
 
         public bool IsDeleted { get; private set; }
-
+ 
         public DateTimeOffset? DeletedAtUtc { get; private set; }
         public bool IsAvailableForRecommendations { get; private set; } = true;
         public DateTimeOffset? GitHubProfileSyncedAtUtc { get; private set; }
@@ -96,6 +104,10 @@ namespace DevMatch.Domain.Entities.Developer
             => _repositories.AsReadOnly();
 
         public IReadOnlyCollection<DeveloperSkill> Skills => _skills.AsReadOnly();
+
+        public bool IsOnboardingCompleted => OnboardingCompletedAtUtc.HasValue;
+
+
         private Developer()
         {
         }
@@ -162,18 +174,45 @@ namespace DevMatch.Domain.Entities.Developer
             UpdatedAtUtc = utcNow;
         }
 
-        
-    
-        public static Developer Create( 
+
+
+        public static Developer Create(
             long gitHubUserId,
             string gitHubUsername,
             string? displayName,
             string? email,
             string? avatarUrl,
-            string? Bio,
-            string? Location
-           )
-            => new(Guid.NewGuid(), gitHubUserId, gitHubUsername, displayName, email, avatarUrl,Bio,Location, DateTime.UtcNow);
+            string? bio,
+            string? location)
+            => Create(
+                gitHubUserId,
+                gitHubUsername,
+                displayName,
+                email,
+                avatarUrl,
+                bio,
+                location,
+                DateTimeOffset.UtcNow);
+
+        public static Developer Create(
+            long gitHubUserId,
+            string gitHubUsername,
+            string? displayName,
+            string? email,
+            string? avatarUrl,
+            string? bio,
+            string? location,
+            DateTimeOffset utcNow)
+            => new(
+                Guid.NewGuid(),
+                gitHubUserId,
+                gitHubUsername,
+                displayName,
+                email,
+                avatarUrl,
+                bio,
+                location,
+                utcNow);
 
         //  CreatedAtUtc = DateTime.UtcNow //Entity نباید بداند EF چه زمانی Save می‌کند.
 
@@ -205,7 +244,33 @@ namespace DevMatch.Domain.Entities.Developer
             GitHubProfileSyncedAtUtc = utcNow;
             UpdatedAtUtc = utcNow;
         }
+        public void SetOnboardingPreferences(
+            IEnumerable<string> preferredLanguages,
+            IEnumerable<string> preferredTopics,
+            int? dailyAvailableMinutes,
+            IEnumerable<string> excludedLabels,
+            bool avoidDocumentation,
+            bool preferBackend,
+            DateTimeOffset utcNow)
+        {
+            EnsureNotDeleted();
 
+            if (dailyAvailableMinutes is < 15 or > 1_440)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(dailyAvailableMinutes),
+                    "Daily available minutes must be between 15 and 1440.");
+            }
+
+            PreferredLanguages = NormalizeStringCollection(preferredLanguages, 50, 20);
+            PreferredTopics = NormalizeStringCollection(preferredTopics, 100, 30);
+            ExcludedLabels = NormalizeStringCollection(excludedLabels, 100, 30);
+            DailyAvailableMinutes = dailyAvailableMinutes;
+            AvoidDocumentation = avoidDocumentation;
+            PreferBackend = preferBackend;
+            OnboardingCompletedAtUtc = utcNow.ToUniversalTime();
+            UpdatedAtUtc = utcNow.ToUniversalTime();
+        }
         public void AddOrUpdateSkill(
             Guid skillId,
             SkillLevel level,
@@ -361,6 +426,23 @@ namespace DevMatch.Domain.Entities.Developer
             }
 
             return normalizedValue;
+        }
+        private static string[] NormalizeStringCollection(
+            IEnumerable<string> values,
+            int itemMaxLength,
+            int maxItems)
+        {
+            ArgumentNullException.ThrowIfNull(values);
+
+            string[] result = values
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value.Trim())
+                .Select(value => value.Length <= itemMaxLength ? value : value[..itemMaxLength])
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Take(maxItems)
+                .ToArray();
+
+            return result;
         }
     }
 

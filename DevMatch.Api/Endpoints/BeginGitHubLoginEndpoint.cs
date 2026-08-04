@@ -1,6 +1,6 @@
 ﻿using DevMatch.Api.Extensions;
 using DevMatch.Api.Infrastructure;
-using DevMatch.Application.Features.Auth.Github.BeginLogin;
+using DevMatch.Application.Features.Authentication.Github.BeginLogin;
 using DevMatch.SharedKernel.Result;
 
 namespace DevMatch.Api.Endpoints

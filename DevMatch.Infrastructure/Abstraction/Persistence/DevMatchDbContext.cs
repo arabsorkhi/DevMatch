@@ -48,6 +48,8 @@ namespace DevMatch.Infrastructure.Abstraction.Persistence
         }
 
         public DbSet<Developer> Developers => Set<Developer>();
+        public DbSet<DeveloperGitHubCredential> DeveloperGitHubCredentials => Set<DeveloperGitHubCredential>();
+
         public DbSet<GitRepository> GitRepositories => Set<GitRepository>();
         public DbSet<GitIssue> GitIssues => Set<GitIssue>();
         public DbSet<Skill> Skills => Set<Skill>();
@@ -55,6 +57,8 @@ namespace DevMatch.Infrastructure.Abstraction.Persistence
         public DbSet<IssueSkill> IssueSkills => Set<IssueSkill>();
         public DbSet<Contribution> Contributions =>            Set<Contribution>();
         public DbSet<DailyRecommendation>  DailyRecommendations => Set<DailyRecommendation>();
+       
+        
         protected override void OnModelCreating(
             ModelBuilder modelBuilder)
         {

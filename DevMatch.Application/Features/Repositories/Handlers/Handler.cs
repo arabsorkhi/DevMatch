@@ -1,4 +1,4 @@
-﻿using DevMatch.Application.Abstraction.Auth;
+﻿using DevMatch.Application.Abstraction.Authentication;
 using DevMatch.Application.Abstraction.Messaging;
 using DevMatch.Application.Abstraction.Persistence;
 using DevMatch.Application.Common;

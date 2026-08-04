@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevMatch.Application.Features.Auth.Github.BeginLogin
+namespace DevMatch.Application.Features.Authentication.Github.BeginLogin
 {
     public sealed record BeginGitHubLoginResponse(
-        string AuthorizationUrl);
+        string AuthorizationUrl,
+        string State);
 }

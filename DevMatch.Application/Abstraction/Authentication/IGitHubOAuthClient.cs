@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DevMatch.Application.Abstraction.Authentication;
 
-namespace DevMatch.Application.Abstraction.Auth
+namespace DevMatch.Application.Abstraction.Authentication
 {
     public interface IGitHubOAuthClient
     {
@@ -22,6 +21,11 @@ namespace DevMatch.Application.Abstraction.Auth
     }
 
 
+    public sealed record GitHubAccessToken(
+        string AccessToken,
+        string TokenType,
+        IReadOnlyCollection<string> Scopes,
+        DateTimeOffset? ExpiresAtUtc);
 
     public sealed record GitHubUserProfile(
         long Id,
@@ -30,5 +34,7 @@ namespace DevMatch.Application.Abstraction.Auth
         string? Email,
         string? AvatarUrl,
         string? Bio,
-        string? Location);
+        string? Location,
+        string? Company,
+        string? BlogUrl);
 }

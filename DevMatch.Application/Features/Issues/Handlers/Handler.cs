@@ -1,5 +1,4 @@
-﻿using DevMatch.Application.Abstraction.Auth;
-using DevMatch.Application.Abstraction.Messaging;
+﻿using DevMatch.Application.Abstraction.Messaging;
 using DevMatch.Application.Abstraction.Persistence;
 using DevMatch.Application.Integrations.Github.DTO;
 using DevMatch.Domain.Entities.GitRepository;
@@ -13,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using DevMatch.Application.Features.Issues.Commands;
 using DevMatch.Application.Abstraction.Authentication.Github;
+using DevMatch.Application.Abstraction.Authentication;
 
 namespace DevMatch.Application.Features.Issues.Handlers
 {

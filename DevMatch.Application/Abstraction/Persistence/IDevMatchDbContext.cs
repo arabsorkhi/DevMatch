@@ -18,5 +18,7 @@ namespace DevMatch.Application.Abstraction.Persistence
         DbSet<IssueSkill> IssueSkills { get; }
         DbSet<DailyRecommendation> DailyRecommendations { get; }
         DbSet<Contribution> Contributions { get; }
+        DbSet<DeveloperGitHubCredential> DeveloperGitHubCredentials { get; }
+
     }
 }

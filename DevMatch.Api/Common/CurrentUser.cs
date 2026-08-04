@@ -1,6 +1,6 @@
-﻿using DevMatch.Application.Abstraction.Auth;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.IdentityModel.JsonWebTokens;
+using DevMatch.Application.Abstraction.Authentication;
 
 namespace DevMatch.Api.Common
 {
@@ -33,5 +33,18 @@ namespace DevMatch.Api.Common
                     : throw new UnauthorizedAccessException();
             }
         }
+        public long? GitHubUserId =>
+            long.TryParse(Principal?.FindFirstValue("github_id"), out long id)
+                ? id
+                : null;
+
+        public string? GitHubUsername =>
+            Principal?.FindFirstValue("github_username");
+
+        public string? Email =>
+            Principal?.FindFirstValue("email");
+
+        private ClaimsPrincipal? Principal =>
+            _httpContextAccessor.HttpContext?.User;
     }
 }
