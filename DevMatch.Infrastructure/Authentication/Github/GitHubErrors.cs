@@ -39,5 +39,13 @@ namespace DevMatch.Infrastructure.Authentication.Github
         public static readonly Error AlreadyExists = Error.Failure(
             "GitHub.AlreadyExists",
             "The request to GitHub already exists.");
+        public static readonly Error InvalidAuthorizationCode = Error.Validation(
+            "GitHub.InvalidAuthorizationCode",
+            "The GitHub authorization code is missing or invalid.");
+
+        public static readonly Error OAuthRequestFailed = Error.Unauthorized(
+            "GitHub.OAuthRequestFailed",
+            "GitHub OAuth authentication could not be completed.");
+
     }
 }

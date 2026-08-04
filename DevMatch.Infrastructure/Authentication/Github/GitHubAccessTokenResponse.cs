@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
-namespace DevMatch.Infrastructure.Authentication.Github
+namespace DevMatch.Infrastructure.Authentication.Github;
+
+internal sealed class GitHubAccessTokenResponse
 {
-    internal class GitHubAccessTokenResponse
-    {
-    }
+    [JsonPropertyName("access_token")]
+    public string? AccessToken { get; init; }
+
+    [JsonPropertyName("token_type")]
+    public string? TokenType { get; init; }
+
+    [JsonPropertyName("scope")]
+    public string? Scope { get; init; }
+
+    [JsonPropertyName("expires_in")]
+    public int? ExpiresInSeconds { get; init; }
+
+    [JsonPropertyName("error")]
+    public string? Error { get; init; }
+
+    [JsonPropertyName("error_description")]
+    public string? ErrorDescription { get; init; }
 }

@@ -1,10 +1,16 @@
+using DevMatch.Api.Common;
 using DevMatch.Api.Infrastructure;
 using DevMatch.Api.MiddleWares;
 using DevMatch.Application;
+using DevMatch.Application.Abstraction.Authentication;
 using DevMatch.Application.Abstraction.Authentication.Github;
 using DevMatch.Infrastructure.Authentication.Github;
 using DevMatch.Infrastructure.DependancyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using DevMatch.Infrastructure.Authentication.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 //each error got it :{
@@ -29,6 +35,41 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddApplication();
 builder.Services.AddEndpoints(typeof(Program).Assembly); 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+
+JwtOptions jwtOptions = builder.Configuration
+    .GetSection(JwtOptions.SectionName)
+    .Get<JwtOptions>() ?? new JwtOptions();
+
+if (Encoding.UTF8.GetByteCount(jwtOptions.SigningKey) < 32)
+{
+    throw new InvalidOperationException(
+        "Authentication:Jwt:SigningKey must contain at least 32 bytes. " +
+        "Store it in environment variables or user-secrets, never in source control.");
+}
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.MapInboundClaims = false;
+        options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtOptions.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtOptions.SigningKey)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromSeconds(30),
+            NameClaimType = "github_username"
+        };
+    });
+
 
 
 builder.Services

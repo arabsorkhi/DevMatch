@@ -30,7 +30,8 @@ namespace DevMatch.Api.Common
 
                 return Guid.TryParse(subject, out Guid id)
                     ? id
-                    : throw new UnauthorizedAccessException();
+                    : throw new UnauthorizedAccessException("The current JWT does not contain a valid developer id.");
+
             }
         }
         public long? GitHubUserId =>
