@@ -57,8 +57,14 @@ namespace DevMatch.Infrastructure.Abstraction.Persistence
         public DbSet<IssueSkill> IssueSkills => Set<IssueSkill>();
         public DbSet<Contribution> Contributions =>            Set<Contribution>();
         public DbSet<DailyRecommendation>  DailyRecommendations => Set<DailyRecommendation>();
-       
-        
+
+        public DbSet<RepositorySource> RepositorySources => Set<RepositorySource>();
+        public DbSet<RepositoryTopic> RepositoryTopics => Set<RepositoryTopic>();
+        public DbSet<IssueLabel> IssueLabels => Set<IssueLabel>();
+        public DbSet<IssueCandidate> IssueCandidates => Set<IssueCandidate>();
+        public DbSet<IssueCandidateLabel> IssueCandidateLabels => Set<IssueCandidateLabel>();
+        public DbSet<IssueSyncState> IssueSyncStates => Set<IssueSyncState>();
+
         protected override void OnModelCreating(
             ModelBuilder modelBuilder)
         {
