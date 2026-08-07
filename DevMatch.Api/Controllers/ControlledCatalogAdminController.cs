@@ -1,4 +1,4 @@
-﻿using DevMatch.Application.Abstraction.Authentication.Github;
+﻿using DevMatch.Application.Abstraction.Github;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

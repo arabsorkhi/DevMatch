@@ -1,5 +1,7 @@
 ﻿using DevMatch.Application.Abstraction;
-using DevMatch.Application.Features.Authentication.Github.BeginLogin;
+using DevMatch.Application.Abstraction.Issues;
+using DevMatch.Application.Features.Github.BeginLogin;
+using DevMatch.Application.Issues;
 using DevMatch.Domain.Entities.Matching;
 using DevMatch.Domain.Services;
 using FluentValidation;
@@ -31,6 +33,9 @@ namespace DevMatch.Application
             services.AddScoped<IMatchingService, MatchingService>();
          //   services.AddHttpClient<IGitHubOAuthClient, GitHubOAuthClient>();
             services.AddScoped<BeginGitHubLoginHandler>();
+            services.AddSingleton<IIssueAnalyzer, RuleBasedIssueAnalyzer>();
+
+
             var assembly = typeof(DependencyInjection).Assembly;
 
             services.Scan(scan => scan

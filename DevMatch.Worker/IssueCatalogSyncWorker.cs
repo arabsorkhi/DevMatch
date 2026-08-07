@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DevMatch.Application.Abstraction.Authentication.Github;
 using DevMatch.Application.Common.Option;
+using DevMatch.Application.Abstraction.Github;
 
 namespace DevMatch.Worker
 {

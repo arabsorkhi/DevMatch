@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Authentication\" />
     <Folder Include="Features\Bookmarks\Commands\" />
     <Folder Include="Features\Bookmarks\DTO\" />
     <Folder Include="Features\Bookmarks\Handlers\" />

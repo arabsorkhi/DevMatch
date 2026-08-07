@@ -3,7 +3,6 @@ using DevMatch.Api.Infrastructure;
 using DevMatch.Api.MiddleWares;
 using DevMatch.Application;
 using DevMatch.Application.Abstraction.Authentication;
-using DevMatch.Application.Abstraction.Authentication.Github;
 using DevMatch.Infrastructure.Authentication.Github;
 using DevMatch.Infrastructure.DependancyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using DevMatch.Infrastructure.Authentication.Jwt;
+using DevMatch.Application.Abstraction.Github;
 
 var builder = WebApplication.CreateBuilder(args);
 //each error got it :{

@@ -1,5 +1,4 @@
-﻿using DevMatch.Application.Abstraction.Authentication.Github;
-using DevMatch.Application.Common.Option;
+﻿using DevMatch.Application.Common.Option;
 using DevMatch.Infrastructure.Abstraction.Persistence;
 using DevMatch.Infrastructure.ControlledCatalog;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +12,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using DevMatch.Infrastructure.Services;
+using DevMatch.Application.Abstraction.Github;
 
 namespace DevMatch.Infrastructure.DependancyInjection
 {

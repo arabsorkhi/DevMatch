@@ -1,6 +1,5 @@
 ﻿using DevMatch.Application.Abstraction;
 using DevMatch.Application.Abstraction.Authentication;
-using DevMatch.Application.Abstraction.Authentication.Github;
 using DevMatch.Application.Abstraction.Persistence;
 using DevMatch.Domain.Services;
 using DevMatch.Infrastructure.Abstraction.Persistence;
@@ -16,7 +15,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DevMatch.Application.Abstraction.Auth;
 using DevMatch.Infrastructure.Security;
+using DevMatch.Application.Abstraction.Github;
 
 namespace DevMatch.Infrastructure.DependancyInjection
 {
@@ -44,6 +45,15 @@ namespace DevMatch.Infrastructure.DependancyInjection
                 client.BaseAddress = new Uri(options.BaseUrl);
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
             });
+
+
+            string dataProtectionKeysPath = configuration["DataProtection:KeysPath"]
+                                            ?? Path.Combine(AppContext.BaseDirectory, ".keys");
+            Directory.CreateDirectory(dataProtectionKeysPath);
+            //services.AddDataProtection()
+            //    .SetApplicationName("DevMatch")
+            //    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysPath));
+
             services.AddScoped<
                 IMatchingProfileReader, MatchingProfileReader>();
             services.Configure<GitHubOptions>(
@@ -77,9 +87,16 @@ namespace DevMatch.Infrastructure.DependancyInjection
             services.AddSingleton<IGitHubTokenProtector, AesGcmGitHubTokenProtector>();
             services.AddSingleton<IAccessTokenProvider, AccessTokenProvider>();
             services.AddScoped<IGitHubTokenProvider, GitHubTokenProvider>();
+            services.AddScoped<GitHubTokenStore>();
+            services.AddScoped<IGitHubTokenStore>(provider => provider.GetRequiredService<GitHubTokenStore>());
+            services.AddScoped<IGitHubTokenProvider>(provider => provider.GetRequiredService<GitHubTokenStore>());
+
             services.AddScoped<IMatchingProfileReader, MatchingProfileReader>();
 
             return services;
         }
+
+        private static string EnsureTrailingSlash(string value) =>
+            value.EndsWith("/", StringComparison.Ordinal) ? value : value + "/";
     }
 }

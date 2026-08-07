@@ -1,4 +1,4 @@
-﻿using DevMatch.Application.Abstraction.Authentication.Github;
+﻿using DevMatch.Application.Abstraction.Github;
 using DevMatch.Application.Common.Option;
 using DevMatch.Domain.Entities.GitRepository;
 using Microsoft.Extensions.Options;

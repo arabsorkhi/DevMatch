@@ -61,10 +61,71 @@ namespace DevMatch.Infrastructure.Matching
                         x.LastContributionAtUtc))
                     .ToArrayAsync(cancellationToken);
 
+
+
+            DeveloperPreference? preference = await _dbContext.DeveloperPreferences
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.DeveloperId == developerId, cancellationToken);
+          
+            DeveloperPreference preferences;
+            if (preference is null)
+            {
+                // ایجاد نمونه جدید با مقادیر پیش‌فرض
+                preferences = DeveloperPreference.Create(developerId, DateTimeOffset.UtcNow);
+            }
+            else
+            {
+                // به‌روزرسانی با مقادیر موجود یا پیش‌فرض
+                preference.Update(
+                    selfReportedLevel: preference.SelfReportedLevel,
+                    preferredLanguages: preference.PreferredLanguages ?? Array.Empty<string>(),
+                    preferredTopics: preference.PreferredTopics ?? Array.Empty<string>(),
+                    excludedLabels: preference.ExcludedLabels ?? Array.Empty<string>(),
+                    dailyAvailableMinutes: preference.DailyAvailableMinutes,
+                    avoidDocumentation: preference.AvoidDocumentation,
+                    preferBackend: preference.PreferBackend,
+                    utcNow: DateTimeOffset.UtcNow
+                );
+                preferences = preference;
+            }
+
+            SkillLevel level = preference is not null && preference.SelfReportedLevel != SkillLevel.Unknown
+                ? preference.SelfReportedLevel
+                : ResolveDeveloperLevel(skills);
+
+            var feedbackRows = await _dbContext.RecommendationFeedback
+                .AsNoTracking()
+                .Where(x => x.DeveloperId == developerId)
+                .OrderByDescending(x => x.OccurredAtUtc)
+                .Take(100)
+                .Select(x => new { x.IssueId, x.Outcome, x.OccurredAtUtc })
+                .ToArrayAsync(cancellationToken);
+
+            Guid[] feedbackIssueIds = feedbackRows.Select(x => x.IssueId).Distinct().ToArray();
+            var feedbackSkillRows = await _dbContext.IssueSkills
+                .AsNoTracking()
+                .Where(x => feedbackIssueIds.Contains(x.GitIssueId))
+                .Select(x => new { x.GitIssueId, SkillName = x.Skill.Name })
+                .ToArrayAsync(cancellationToken);
+
+            Dictionary<Guid, string[]> skillNamesByIssue = feedbackSkillRows
+                .GroupBy(x => x.GitIssueId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Select(x => x.SkillName).Distinct(StringComparer.OrdinalIgnoreCase).ToArray());
+
+            RecommendationHistorySnapshot[] history = feedbackRows
+                .Select(x => new RecommendationHistorySnapshot(
+                    skillNamesByIssue.GetValueOrDefault(x.IssueId, []),
+                    x.Outcome,
+                    x.OccurredAtUtc))
+                .ToArray();
+
+
             return new DeveloperMatchProfile(
                 DeveloperId: developer.Id,
                 Level: ResolveDeveloperLevel(skills),
-                Preferences: DeveloperPreferences.Empty,
+                Preferences: preferences,
                 Skills: skills,
                 Contributions: contributions,
                 History: Array.Empty<RecommendationHistorySnapshot>());

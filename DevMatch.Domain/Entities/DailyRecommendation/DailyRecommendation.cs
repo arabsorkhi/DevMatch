@@ -18,13 +18,22 @@ namespace DevMatch.Domain.Entities.DailyRecommendation
             Guid issueId,
             int rank,
             decimal score,
+            IReadOnlyCollection<string> matchedSkills,
+            IReadOnlyCollection<string> missingSkills,
+            IReadOnlyCollection<string> reasons,
             DateTimeOffset generatedAtUtc)
         {
+            DateTimeOffset normalized = generatedAtUtc.ToUniversalTime();
+            Id = Guid.NewGuid();
             DeveloperId = developerId;
             IssueId = issueId;
             Rank = rank;
             Score = Math.Clamp(score, 0m, 100m);
-            GeneratedAtUtc = generatedAtUtc;
+            MatchedSkills = Normalize(matchedSkills);
+            MissingSkills = Normalize(missingSkills);
+            Reasons = Normalize(reasons);
+            GeneratedAtUtc = normalized;
+            CreatedAtUtc = normalized;
         }
 
         public Guid DeveloperId { get; private set; }
@@ -34,7 +43,9 @@ namespace DevMatch.Domain.Entities.DailyRecommendation
         public int Rank { get; private set; }
 
         public decimal Score { get; private set; }
-
+        public string[] MatchedSkills { get; private set; } = [];
+        public string[] MissingSkills { get; private set; } = [];
+        public string[] Reasons { get; private set; } = [];
         public DateTimeOffset GeneratedAtUtc { get; private set; }
 
         public static DailyRecommendation Create(
@@ -42,34 +53,36 @@ namespace DevMatch.Domain.Entities.DailyRecommendation
             Guid issueId,
             int rank,
             decimal score,
+            IReadOnlyCollection<string> matchedSkills,
+            IReadOnlyCollection<string> missingSkills,
+            IReadOnlyCollection<string> reasons,
             DateTimeOffset generatedAtUtc)
         {
             if (developerId == Guid.Empty)
-            {
-                throw new ArgumentException(
-                    "Developer ID cannot be empty.",
-                    nameof(developerId));
-            }
-
+                throw new ArgumentException("Developer ID cannot be empty.", nameof(developerId));
             if (issueId == Guid.Empty)
-            {
-                throw new ArgumentException(
-                    "Issue ID cannot be empty.",
-                    nameof(issueId));
-            }
-
+                throw new ArgumentException("Issue ID cannot be empty.", nameof(issueId));
             if (rank <= 0)
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(rank));
-            }
+                throw new ArgumentOutOfRangeException(nameof(rank));
 
             return new DailyRecommendation(
                 developerId,
                 issueId,
                 rank,
                 score,
+                matchedSkills,
+                missingSkills,
+                reasons,
                 generatedAtUtc);
         }
-    }
+
+        private static string[] Normalize(IEnumerable<string>? values) =>
+            (values ?? Array.Empty<string>())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => x.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Take(20)
+            .ToArray();
+    
+}
 }

@@ -52,6 +52,8 @@ namespace DevMatch.Domain.Entities.GitRepository
         public string? Description { get; private set; }
 
         public string? Language { get; private set; }
+        public string[] Topics { get; private set; } = [];
+
 
         public int Stars { get; private set; }
 
@@ -133,6 +135,7 @@ namespace DevMatch.Domain.Entities.GitRepository
             int stars,
             int forks,
             int openIssues,
+            IReadOnlyCollection<string> topics,
             DateTimeOffset githubUpdatedAt,
             DateTimeOffset? lastPushedAt,
             DateTime syncedAtUtc)
@@ -173,6 +176,7 @@ namespace DevMatch.Domain.Entities.GitRepository
             int stars,
             int forks,
             int openIssues,
+            IReadOnlyCollection<string> topics,
             DateTimeOffset githubUpdatedAt,
             DateTimeOffset? lastPushedAt,
             DateTime syncedAtUtc)

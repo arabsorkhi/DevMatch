@@ -50,7 +50,26 @@ namespace DevMatch.Domain.Enums
         GitHubContribution = 3,
         Imported = 4
     }
+    public enum IssueTaskType
+    {
+        Unknown = 0,
+        Bug = 1,
+        Documentation = 2,
+        Testing = 3,
+        Refactor = 4,
+        Feature = 5,
+        UserInterface = 6,
+        DevOps = 7,
+        Performance = 8,
+        Security = 9
+    }
 
+    public enum EstimateConfidence
+    {
+        Low = 1,
+        Medium = 2,
+        High = 3
+    }
 
 
     //    private static readonly int[,] LevelMatrix =

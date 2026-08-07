@@ -10,8 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using DevMatch.Application.Abstraction.Authentication.Github;
 using DevMatch.Application.Abstraction.Authentication;
+using DevMatch.Application.Abstraction.Github;
 
 namespace DevMatch.Application.Features.Repositories.SyncRepo
 {
@@ -62,7 +62,7 @@ namespace DevMatch.Application.Features.Repositories.SyncRepo
                         item.OwnerLogin, item.Name, item.FullName, item.Description,
                         item.HtmlUrl, item.Language, item.IsPrivate, item.IsFork,
                         item.IsArchived, item.StargazersCount, item.ForksCount,
-                        item.OpenIssuesCount, item.UpdatedAt, item.PushedAt, syncedAtUtc);
+                        item.OpenIssuesCount, item.Topics, item.UpdatedAt, item.PushedAt, syncedAtUtc);
                     updated++;
                     continue;
                 }
@@ -72,7 +72,8 @@ namespace DevMatch.Application.Features.Repositories.SyncRepo
                     item.Id, item.OwnerLogin, item.Name, item.FullName, item.Description,
                     item.HtmlUrl, item.Language, item.IsPrivate, item.IsFork,
                     item.IsArchived, item.StargazersCount, item.ForksCount,
-                    item.OpenIssuesCount, item.UpdatedAt, item.PushedAt, syncedAtUtc);
+                    item.OpenIssuesCount, item.Topics, item.UpdatedAt, item.PushedAt, syncedAtUtc);
+
 
                 await _dbContext.GitRepositories.AddAsync(repository, cancellationToken);
                 created++;

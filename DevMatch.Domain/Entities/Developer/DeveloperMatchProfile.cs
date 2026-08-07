@@ -6,29 +6,11 @@ namespace DevMatch.Domain.Entities.Developer
     public sealed record DeveloperMatchProfile(
         Guid DeveloperId,
         SkillLevel Level,
-        DeveloperPreferences Preferences,
+        DeveloperPreference Preferences,
         IReadOnlyCollection<DeveloperSkillSnapshot> Skills,
         IReadOnlyCollection<RepositoryContributionSnapshot> Contributions,
         IReadOnlyCollection<RecommendationHistorySnapshot> History);
 
-   
-
-    public sealed record DeveloperPreferences(
-        IReadOnlyCollection<string> PreferredLanguages,
-        IReadOnlyCollection<string> PreferredTopics,
-        int? DailyAvailableMinutes,
-        IReadOnlyCollection<string> ExcludedLabels,
-        bool AvoidDocumentation,
-        bool PreferBackend)
-    {
-        public static DeveloperPreferences Empty { get; } = new(
-            PreferredLanguages: Array.Empty<string>(),
-            PreferredTopics: Array.Empty<string>(),
-            DailyAvailableMinutes: null,
-            ExcludedLabels: Array.Empty<string>(),
-            AvoidDocumentation: false,
-            PreferBackend: false);
-    }
 
     public sealed record DeveloperSkillSnapshot(
         Guid SkillId,

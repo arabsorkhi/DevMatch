@@ -1,4 +1,4 @@
-﻿using DevMatch.Application.Abstraction.Authentication.Github;
+﻿using DevMatch.Application.Abstraction.Github;
 using DevMatch.Application.Integrations.Github.DTO;
 using Microsoft.Extensions.Options;
 using System;
@@ -135,7 +135,52 @@ namespace DevMatch.Infrastructure.Authentication.Github
 
             return result;
         }
+        public async Task<GitHubRepositoryDto> GetRepositoryAsync(
+            string accessToken,
+            string owner,
+            string repository,
+            CancellationToken cancellationToken = default)
+        {
+            EnsureToken(accessToken);
 
+            if (string.IsNullOrWhiteSpace(owner))
+                throw new ArgumentException("Owner is required.", nameof(owner));
+            if (string.IsNullOrWhiteSpace(repository))
+                throw new ArgumentException("Repository is required.", nameof(repository));
+
+            string relativeUrl =
+                $"repos/{Uri.EscapeDataString(owner.Trim())}/{Uri.EscapeDataString(repository.Trim())}";
+
+            GitHubRepositoryResponse response = await GetSingleAsync<GitHubRepositoryResponse>(
+                relativeUrl,
+                accessToken,
+                cancellationToken);
+
+            return MapRepository(response);
+        }
+
+        private async Task<T> GetSingleAsync<T>(
+            string relativeUrl,
+            string accessToken,
+            CancellationToken cancellationToken)
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, relativeUrl);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
+            request.Headers.TryAddWithoutValidation("X-GitHub-Api-Version", _options.ApiVersion);
+
+            using HttpResponseMessage response = await _httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken);
+
+            string body = await response.Content.ReadAsStringAsync(cancellationToken);
+            if (!response.IsSuccessStatusCode)
+                throw new GitHubApiException(response.StatusCode, body);
+
+            T? value = JsonSerializer.Deserialize<T>(body, _jsonOptions);
+            return value ?? throw new GitHubApiException(response.StatusCode, body);
+        }
         private async Task<IReadOnlyList<T>> GetAsync<T>(
             string relativeUrl,
             string accessToken,
@@ -173,6 +218,10 @@ namespace DevMatch.Infrastructure.Authentication.Github
             source.StargazersCount,
             source.ForksCount,
             source.OpenIssuesCount,
+            source.Topics
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray(),
             source.UpdatedAt,
             source.PushedAt);
 
@@ -207,6 +256,7 @@ namespace DevMatch.Infrastructure.Authentication.Github
             public bool Private { get; init; }
             public bool Fork { get; init; }
             public bool Archived { get; init; }
+            public List<string> Topics { get; init; } = [];
             [JsonPropertyName("stargazers_count")] public int StargazersCount { get; init; }
             [JsonPropertyName("forks_count")] public int ForksCount { get; init; }
             [JsonPropertyName("open_issues_count")] public int OpenIssuesCount { get; init; }

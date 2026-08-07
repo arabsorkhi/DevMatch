@@ -20,6 +20,7 @@ namespace DevMatch.Application.Integrations.Github.DTO
         int StargazersCount,
         int ForksCount,
         int OpenIssuesCount,
+        IReadOnlyCollection<string> Topics,
         DateTimeOffset UpdatedAt,
         DateTimeOffset? PushedAt);
 

@@ -123,17 +123,22 @@ namespace DevMatch.Application.Features.Recommendations.GenerateDailyRecommendat
                     .Select((match, index) =>
                         DailyRecommendation.Create(
                             developerId:
-                                command.DeveloperId,
+                            command.DeveloperId,
                             issueId:
-                                match.IssueId,
+                            match.IssueId,
                             rank:
-                                index + 1,
+                            index + 1,
                             score:
-                                match.Score,
+                            match.Score,
+                            matchedSkills:
+                            match.MatchedSkills,
+                            missingSkills:
+                            match.MissingSkills,
+                            reasons:
+                            match.Reasons.Select(reason => reason.Message).ToArray(),
                             generatedAtUtc:
-                                utcNow))
+                            utcNow))
                     .ToArray();
-
             if (recommendations.Length > 0)
             {
                 await _dbContext.DailyRecommendations

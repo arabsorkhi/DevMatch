@@ -1,9 +1,12 @@
 ﻿using DevMatch.Application.Abstraction.Persistence;
 using DevMatch.Domain.Entities;
+using DevMatch.Domain.Entities.Authentication;
 using DevMatch.Domain.Entities.DailyRecommendation;
 using DevMatch.Domain.Entities.Developer;
 using DevMatch.Domain.Entities.GitRepository;
 using DevMatch.Domain.Entities.Issue;
+using DevMatch.Domain.Entities.Notification;
+using DevMatch.Domain.Entities.RecommendationFeedback;
 using DevMatch.Domain.Entities.Skill;
 using DevMatch.SharedKernel.Common;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +60,10 @@ namespace DevMatch.Infrastructure.Abstraction.Persistence
         public DbSet<IssueSkill> IssueSkills => Set<IssueSkill>();
         public DbSet<Contribution> Contributions =>            Set<Contribution>();
         public DbSet<DailyRecommendation>  DailyRecommendations => Set<DailyRecommendation>();
+        public DbSet<GitHubCredential> GitHubCredentials => Set<GitHubCredential>();
+        public DbSet<DeveloperPreference> DeveloperPreferences => Set<DeveloperPreference>();
+        public DbSet<RecommendationFeedback> RecommendationFeedback => Set<RecommendationFeedback>();
+        public DbSet<UserNotification> UserNotifications => Set<UserNotification>();
 
         public DbSet<RepositorySource> RepositorySources => Set<RepositorySource>();
         public DbSet<RepositoryTopic> RepositoryTopics => Set<RepositoryTopic>();

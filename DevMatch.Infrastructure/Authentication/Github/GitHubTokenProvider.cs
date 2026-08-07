@@ -1,4 +1,4 @@
-using DevMatch.Application.Abstraction.Authentication.Github;
+using DevMatch.Application.Abstraction.Github;
 using DevMatch.Application.Abstraction.Persistence;
 using Microsoft.EntityFrameworkCore;
 

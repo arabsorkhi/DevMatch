@@ -3,7 +3,7 @@ using DevMatch.Domain.Entities.Matching;
 using DevMatch.Domain.Entities.Skill;
 using DevMatch.Domain.Enums;
 using DevMatch.Domain.ValueObjects;
-using DeveloperPreferences = DevMatch.Domain.Entities.Developer.DeveloperPreferences;
+using DeveloperPreferences = DevMatch.Domain.Entities.Developer.DeveloperPreference;
 using DeveloperSkillSnapshot = DevMatch.Domain.Entities.Developer. DeveloperSkillSnapshot;
 using IssueMatchProfile = DevMatch.Domain.Entities.Matching.IssueMatchProfile;
 using IssueSkillSnapshot = DevMatch.Domain.Entities.Developer.IssueSkillSnapshot;
@@ -329,7 +329,7 @@ namespace DevMatch.Domain.Services
                 score += 20m;
             }
 
-            if (preferences.PreferredTopics.Count > 0
+            if (preferences.PreferredTopics.Count() > 0
                 && issue.RepositoryTopics.Any(topic => preferences.PreferredTopics.Contains(topic, StringComparer.OrdinalIgnoreCase)))
             {
                 score += 15m;

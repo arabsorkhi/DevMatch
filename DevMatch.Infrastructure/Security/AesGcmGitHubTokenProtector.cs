@@ -1,4 +1,4 @@
-using DevMatch.Application.Abstraction.Authentication.Github;
+using DevMatch.Application.Abstraction.Github;
 using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using System.Text;

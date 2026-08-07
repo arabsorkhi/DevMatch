@@ -1,5 +1,4 @@
-﻿using DevMatch.Application.Abstraction.Authentication.Github;
-using DevMatch.Domain.Entities.Issue;
+﻿using DevMatch.Domain.Entities.Issue;
 using DevMatch.Domain.Enums;
 using DevMatch.Infrastructure.Abstraction.Persistence;
 using Microsoft.Extensions.Logging;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using DevMatch.Application.Abstraction.Github;
 
 namespace DevMatch.Infrastructure.Services
 {

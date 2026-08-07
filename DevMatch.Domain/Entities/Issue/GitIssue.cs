@@ -29,13 +29,21 @@ namespace DevMatch.Domain.Entities.Issue
         public GitIssueState State { get; private set; }
 
         public IssueDifficulty Difficulty { get; private set; }
+        public IssueTaskType TaskType { get; private set; } = IssueTaskType.Unknown;
+
 
         public bool IsGoodFirstIssue { get; private set; }
 
         public bool IsHelpWanted { get; private set; }
 
         public int EstimatedMinutes { get; private set; }
+        public int EstimatedMinutesMin { get; private set; }
+        public int EstimatedMinutesMax { get; private set; }
+        public EstimateConfidence EstimateConfidence { get; private set; } = EstimateConfidence.Low;
+
         public bool IsAssigned { get; private set; }
+        public string[] Labels { get; private set; } = [];
+
         public DateTimeOffset GithubCreatedAtUtc { get; private set; }
         public DateTimeOffset GithubUpdatedAtUtc { get; private set; }
         public DateTimeOffset? ClosedAtUtc { get; private set; }
@@ -101,6 +109,7 @@ namespace DevMatch.Domain.Entities.Issue
                 CreatedAtUtc = now
             };
         }
+       
         public static GitIssue CreateFromGitHub(
             Guid repositoryId,
             long githubIssueId,
@@ -116,6 +125,15 @@ namespace DevMatch.Domain.Entities.Issue
             IReadOnlyCollection<string> labels,
             DateTime syncedAtUtc)
         {
+            if (repositoryId == Guid.Empty)
+            {
+                throw new ArgumentException("Repository id cannot be empty.", nameof(repositoryId));
+            }
+
+            if (githubIssueId <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(githubIssueId));
+            }
             var issue = new GitIssue
             {
                 Id = Guid.NewGuid(),
@@ -209,8 +227,35 @@ namespace DevMatch.Domain.Entities.Issue
 
             UpdatedAtUtc = DateTime.UtcNow;
         }
-        
 
+        public void ApplyAnalysis(
+            IssueDifficulty difficulty,
+            IssueTaskType taskType,
+            int estimatedMinutesMin,
+            int estimatedMinutesMax,
+            EstimateConfidence confidence,
+            DateTimeOffset utcNow)
+        {
+            if (estimatedMinutesMin <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(estimatedMinutesMin));
+            }
+
+            if (estimatedMinutesMax < estimatedMinutesMin)
+            {
+                throw new ArgumentOutOfRangeException(nameof(estimatedMinutesMax));
+            }
+
+            Difficulty = difficulty;
+            TaskType = taskType;
+            EstimatedMinutesMin = estimatedMinutesMin;
+            EstimatedMinutesMax = estimatedMinutesMax;
+            EstimatedMinutes = (int)Math.Round(
+                (estimatedMinutesMin + estimatedMinutesMax) / 2m,
+                MidpointRounding.AwayFromZero);
+            EstimateConfidence = confidence;
+            UpdatedAtUtc = utcNow.ToUniversalTime();
+        }
         private void ApplyGitHubState(
             int number,
             string title,
@@ -236,6 +281,14 @@ namespace DevMatch.Domain.Entities.Issue
             GithubUpdatedAtUtc = githubUpdatedAt.UtcDateTime;
             ClosedAtUtc = closedAt?.UtcDateTime;
             LastSyncedAtUtc = syncedAtUtc;
+            UpdatedAtUtc = LastSyncedAtUtc;
+
+            Labels = labels
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Select(x => x.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
 
             HashSet<string> normalizedLabels = labels
                 .Select(SkillAlias.Normalize)
